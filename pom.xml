@@ -7,9 +7,6 @@
 	<version>0.0.1-SNAPSHOT</version>
 	<properties>
 		<telegrambots.version>v2.3.2</telegrambots.version>
-		<maven.compiler.source>1.8</maven.compiler.source>
-		<maven.compiler.target>1.8</maven.compiler.target>
-		<maven.compiler.encoding>UTF-8</maven.compiler.encoding>
 	</properties>
 
 	<repositories>
@@ -90,6 +87,15 @@
 					<artifactId>exec-maven-plugin</artifactId>
 					<version>1.5.0</version>
 				</plugin>
+				<plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <configuration>
+                        <source>1.8</source>
+                        <target>1.8</target>
+                        <encoding>UTF-8</encoding>
+                    </configuration>
+                </plugin>
 			</plugins>
 		</pluginManagement>
 	</build>

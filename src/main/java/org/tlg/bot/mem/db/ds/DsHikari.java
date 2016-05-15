@@ -21,7 +21,7 @@ public class DsHikari implements Ds {
     
     private static final Ds ds = new DsHikari();
     private static final String file = "/hikari.properties";
-    
+
     private final DataSource dataSource;
     
     private DsHikari()  {
@@ -30,6 +30,7 @@ public class DsHikari implements Ds {
     }
     
     private DataSource initDs() {
+        
         HikariConfig config;
         config = new HikariConfig(file);
         return new HikariDataSource(config);
