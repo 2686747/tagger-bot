@@ -1,0 +1,108 @@
+/**
+ * 
+ */
+package org.tlg.bot.mem.db;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Collection;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.tlg.bot.mem.db.domain.BasePicture;
+import org.tlg.bot.mem.db.domain.MediaTags;
+import org.tlg.bot.mem.db.domain.Picture;
+import org.tlg.bot.mem.db.domain.Tags;
+import org.tlg.bot.mem.db.domain.TlgMediaType;
+import org.vmk.db.ds.Ds;
+
+/**
+ * @author "Maksim Vakhnik"
+ *
+ */
+public class RepTags {
+
+    public static final int MAX_INLINE_RESP_SIZE = 50;
+    private static final Logger log = LoggerFactory
+        .getLogger(RepTags.class.getName());
+
+    private final Ds ds;
+
+    public RepTags(final Ds ds) {
+        this.ds = ds;
+    }
+
+    public void save(final MediaTags tags) throws SQLException {
+        try (final Connection conn = ds.dataSource().getConnection()) {
+            final StringBuilder sql = new StringBuilder("INSERT INTO ");
+            sql.append(MediaTags.TABLE)
+                .append(" (tag_id, user_id, photo_id, media_type)")
+                .append(" VALUES (?, ?, ?, ?)");
+            final PreparedStatement ps = conn.prepareStatement(sql.toString());
+            for (final String tag : tags.getTags().getTags()) {
+                ps.setString(1, tag);
+                ps.setInt(2, tags.getPicture().getUserId());
+                ps.setString(3, tags.getPicture().getFileId());
+                ps.setByte(4, tags.getPicture().getType().asByte());
+                ps.addBatch();
+            }
+            ps.executeBatch();
+            conn.commit();
+        }
+
+    }
+
+    public Collection<Picture> findByTags(final Tags tags, final Integer userId)
+        throws SQLException {
+        try (final Connection conn = ds.dataSource().getConnection()) {
+            final StringBuilder sql = new StringBuilder(
+                "SELECT DISTINCT photo_id, user_id, media_type FROM "
+                );
+            sql.append(MediaTags.TABLE).append(" WHERE ");
+            final String OR = " OR ";
+            final String AND = " AND ";
+            tags.getTags().forEach(tag -> {
+                
+            });
+            tags.getTags().forEach(tag -> {
+                sql.append("tag_id LIKE ? ");
+                sql.append(OR);
+            });
+            if (!tags.getTags().isEmpty()) {
+                sql.setLength(sql.length() - OR.length());
+                sql.append(AND);
+            }
+            sql.append("user_id = ?");
+
+            final PreparedStatement ps = conn.prepareStatement(sql.toString());
+            int index = 1;
+            for (final String tag : tags.getTags()) {
+                ps.setString(index++, tag + "%");
+            }
+
+            ps.setInt(tags.getTags().size() + 1, userId);
+            log.debug("findByTags:{}", ps);
+            final ResultSet rs = ps.executeQuery();
+
+            return RepTags.rsTags(rs);
+        }
+    }
+
+    private static Collection<Picture> rsTags(final ResultSet rs)
+        throws SQLException {
+        final Collection<Picture> result = new ArrayList<>();
+        while (rs.next()) {
+            result.add(
+                new BasePicture(
+                    rs.getInt("user_id"),
+                    rs.getString("photo_id"),
+                    TlgMediaType.get(rs.getByte("media_type"))
+                    )
+                );
+        }
+        return result;
+    }
+
+}
