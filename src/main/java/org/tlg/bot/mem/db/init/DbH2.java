@@ -11,13 +11,13 @@ import org.slf4j.LoggerFactory;
  * @author "Maksim Vakhnik"
  *
  */
-public class DbH2OpenShift {
+public class DbH2 {
     private static final Logger log = LoggerFactory
-        .getLogger(DbH2OpenShift.class.getName());
+        .getLogger(DbH2.class.getName());
 
     public static void main(final String... args) {
         log.debug("Start H2 server...");
-        DbH2OpenShift.startH2Server();
+        DbH2.startH2Server();
     }
 
     private static void startH2Server() {

@@ -14,7 +14,7 @@ import org.slf4j.LoggerFactory;
 import org.telegram.telegrambots.TelegramApiException;
 import org.telegram.telegrambots.TelegramBotsApi;
 import org.tlg.bot.mem.db.ds.DsHikari;
-import org.tlg.bot.mem.db.init.DbH2OpenShift;
+import org.tlg.bot.mem.db.init.DbH2;
 import org.vmk.db.Db;
 
 /**
@@ -73,6 +73,6 @@ public class App {
     }
 
     private static void startDb() {
-        DbH2OpenShift.main();
+        DbH2.main();
     }
 }
