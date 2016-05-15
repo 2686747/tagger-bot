@@ -7,7 +7,8 @@ Telegram bot is used for tagging media files for quick sending it in a chat.
 
 * Java SE 8;
 * [Telegram Bot Java Library](https://github.com/rubenlagus/TelegramBots)
-* H2 database
+* Database: [H2](http://h2database.com/html/main.html), [HikariCP](https://github.com/brettwooldridge/HikariCP), simple JDBC
+* [Slf4j](http://www.slf4j.org/) as logger
 
 
 ## License 
