@@ -9,7 +9,6 @@ import org.telegram.telegrambots.api.objects.Message;
 import org.telegram.telegrambots.api.objects.Update;
 import org.tlg.bot.mem.commands.Command;
 import org.tlg.bot.mem.commands.HelpCommand;
-import org.tlg.bot.mem.commands.PhotoCommands;
 import org.tlg.bot.mem.commands.UploadCommand;
 
 /**
@@ -38,8 +37,8 @@ public class CommandProcessor {
             if (message.getText().startsWith("/help")) {
                 return new HelpCommand(message.getChatId());
             }
-            //if tags
-            return new PhotoCommands();
+            //todo reaction to text
+            return new HelpCommand(message.getChatId());
         }
         // if this is photo or sticker
         if (message.getSticker() != null || !message.getPhoto().isEmpty()) {
@@ -48,23 +47,6 @@ public class CommandProcessor {
 
         // if message was not processed
         return new HelpCommand(this.update.getMessage().getChatId());
-        // if just photo return new
-        // log.debug("update:{}", this.update);
-        // final Message message = this.update.getMessage();
-        // final List<PhotoSize> photo = message.getPhoto();
-        // System.out.println(photo.get(0).getFilePath());
-        // return new UploadCommand(message);
-        // if (message.hasText()) {
-        // final String text = message.getText();
-        // if (text.startsWith("/help")) {
-        // return new HelpCommand(this.udpate);
-        // }
-        //
-        //
-        //
-        // }
-        //
-        // return new HelpCommand();
 
     }
 
