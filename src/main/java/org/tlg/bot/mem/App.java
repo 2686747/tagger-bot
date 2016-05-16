@@ -14,7 +14,6 @@ import org.slf4j.LoggerFactory;
 import org.telegram.telegrambots.TelegramApiException;
 import org.telegram.telegrambots.TelegramBotsApi;
 import org.tlg.bot.mem.db.ds.DsHikari;
-import org.tlg.bot.mem.db.init.DbH2;
 import org.vmk.db.Db;
 
 /**
@@ -36,13 +35,14 @@ public class App {
     
     public static void main(final String... args)
         throws SQLException, IOException, URISyntaxException {
-        startDb();        
+      
         if (App.hasArgument(CMD_DROP_TABLE, args)) {
             App.dropTables();
         }
         initDb();
         if (App.hasArgument(CMD_WEB_CONSOLE, args)) {
             Server.startWebServer(DsHikari.ds().dataSource().getConnection());  
+            return;
         }
         final TelegramBotsApi api = new TelegramBotsApi();
         try {
@@ -72,7 +72,5 @@ public class App {
                 .exec();
     }
 
-    private static void startDb() {
-        DbH2.main();
-    }
+
 }
