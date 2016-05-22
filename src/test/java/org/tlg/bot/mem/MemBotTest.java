@@ -81,7 +81,7 @@ public class MemBotTest {
 	        .put("message", message);
 	
 	    final Update updateObj = new Update(update);
-	    bot.onUpdateReceived(updateObj);
+//	    bot.onUpdateReceived(updateObj);
 	    if (!succ.get()) {
 	        fail("test is not passed");
 	    }

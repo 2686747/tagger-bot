@@ -15,7 +15,7 @@ public class HelpMessage extends TextMessage {
         + "search these media by these tags "
         + "and send it to your companion in a chat" ;
 
-    public HelpMessage(final String chatId) {
+    public HelpMessage(final Long chatId) {
         super(chatId, HelpMessage.MSG);
     }
 

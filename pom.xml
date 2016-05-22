@@ -8,6 +8,12 @@
 	<properties>
 		<telegrambots.version>v2.3.2</telegrambots.version>
 	</properties>
+	
+	<parent>
+	  <groupId>org.tlg.bot</groupId>
+  <artifactId>parent</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
+	</parent>
 
 	<repositories>
 		<repository>
@@ -24,10 +30,15 @@
 
 	<dependencies>
 		<dependency>
-			<groupId>com.github.rubenlagus</groupId>
-			<artifactId>TelegramBots</artifactId>
-			<version>${telegrambots.version}</version>
+			<groupId>org.telegram</groupId>
+			<artifactId>telegrambots</artifactId>
+<!-- 			<version>${telegrambots.version}</version> -->
 		</dependency>
+<!-- 		<dependency> -->
+<!-- 			<groupId>com.github.rubenlagus</groupId> -->
+<!-- 			<artifactId>TelegramBots</artifactId> -->
+<!-- 			<version>${telegrambots.version}</version> -->
+<!-- 		</dependency> -->
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
