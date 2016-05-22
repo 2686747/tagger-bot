@@ -16,7 +16,7 @@ import java.util.Properties;
  */
 public class AppConfig {
 
-    private static final String PROP_FILE = "app.properties";
+    private static final String ENV_PROPFILE = "app.config";
     private final String property;
     public AppConfig(final String property) {
         this.property = property;
@@ -26,7 +26,7 @@ public class AppConfig {
         try {
             props.load(
                 Files.newInputStream(
-                    Paths.get(PROP_FILE),
+                    Paths.get(System.getProperty(ENV_PROPFILE)),
                     StandardOpenOption.READ
                 )
             );

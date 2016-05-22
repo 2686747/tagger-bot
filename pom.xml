@@ -83,57 +83,79 @@
 		<pluginManagement>
 			<plugins>
 				<plugin>
-					<groupId>org.codehaus.mojo</groupId>
-					<artifactId>exec-maven-plugin</artifactId>
-					<version>1.5.0</version>
+					<artifactId>maven-assembly-plugin</artifactId>
+					<version>2.6</version>
+					<configuration>
+						<archive>
+							<manifest>
+								<mainClass>org.tlg.bot.mem.App</mainClass>
+							</manifest>
+						</archive>
+						<descriptorRefs>
+							<descriptorRef>jar-with-dependencies</descriptorRef>
+						</descriptorRefs>
+					</configuration>
 				</plugin>
 				<plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-compiler-plugin</artifactId>
-                    <configuration>
-                        <source>1.8</source>
-                        <target>1.8</target>
-                        <encoding>UTF-8</encoding>
-                    </configuration>
-                </plugin>
+					<groupId>org.codehaus.mojo</groupId>
+					<artifactId>exec-maven-plugin</artifactId>
+					<executions>
+						<execution>
+							<id>startApp</id>
+							<phase>install</phase>
+							<goals>
+								<goal>java</goal>
+							</goals>
+							<configuration>
+								<mainClass>org.tlg.bot.mem.App</mainClass>
+							</configuration>
+						</execution>
+					</executions>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-compiler-plugin</artifactId>
+					<configuration>
+						<source>1.8</source>
+						<target>1.8</target>
+						<encoding>UTF-8</encoding>
+					</configuration>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-surefire-plugin</artifactId>
+					<version>2.19.1</version>
+
+				</plugin>
 			</plugins>
 		</pluginManagement>
 	</build>
 	<profiles>
 		<profile>
-			<id>openshift</id>
+			<!-- Use mvn -Denv=test for activation this profile and use needed properties -->
+			<id>test</id>
+			<properties>
+				<app.config>app.properties</app.config>
+				<hikari.config>hikari.test.properties</hikari.config>
+			</properties>
 			<build>
-				<finalName>sendimage</finalName>
 				<plugins>
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-jar-plugin</artifactId>
-						<version>2.4</version>
+						<artifactId>maven-surefire-plugin</artifactId>
 						<configuration>
-							<archive>
-								<manifest>
-									<addClasspath>true</addClasspath>
-									<classpathPrefix>lib/</classpathPrefix>
-									<mainClass>org.tlg.bot.mem.App</mainClass>
-								</manifest>
-							</archive>
+							<systemProperties>
+								<property>
+									<name>hikari.config</name>
+									<value>hikari.test.properties</value>
+								</property>
+								<property>
+									<name>app.config</name>
+									<value>app.properties</value>
+								</property>
+							</systemProperties>
 						</configuration>
-					</plugin>
-					<plugin>
-						<groupId>org.codehaus.mojo</groupId>
-						<artifactId>exec-maven-plugin</artifactId>
-						<executions>
-							<execution>
-								<id>startApp</id>
-								<phase>install</phase>
-								<goals>
-									<goal>java</goal>
-								</goals>
-								<configuration>
-									<mainClass>org.tlg.bot.mem.App</mainClass>
-								</configuration>
-							</execution>
-						</executions>
+
 					</plugin>
 				</plugins>
 			</build>

@@ -11,7 +11,7 @@ import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 
 /**
- * Singleton dataSource.
+ * Singleton dataSource. You have to define hikari.file property for env
  * @author "Maksim Vakhnik"
  *
  */
@@ -20,7 +20,7 @@ public class DsHikari implements Ds {
         .getLogger(DsHikari.class.getName());
     
     private static final Ds ds = new DsHikari();
-    private static final String file = "/hikari.properties";
+    private static final String ENV_FILENAME = "hikari.config";
 
     private final DataSource dataSource;
     
@@ -32,7 +32,12 @@ public class DsHikari implements Ds {
     private DataSource initDs() {
         
         HikariConfig config;
-        config = new HikariConfig(file);
+        final String fileProp = System.getProperty(ENV_FILENAME);
+        System.getProperties().forEach((v, k) -> {
+            log.debug("{}:{}", v, k);
+        });
+        log.debug("HIKARI:{}", fileProp);
+        config = new HikariConfig(fileProp);
         return new HikariDataSource(config);
     }
 
