@@ -29,7 +29,7 @@ public class AppConfig {
     public String value() {
         final Properties props = new Properties();
         final String fileProp = System.getProperty(ENV_PROPFILE);
-        
+        log.debug("environment app.config:{}", fileProp);
         final String fileRes = (fileProp == null || fileProp.isEmpty()) ?
             DEFAULT_FILEPROP :
             fileProp;
