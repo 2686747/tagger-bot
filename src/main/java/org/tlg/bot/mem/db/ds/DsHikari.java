@@ -20,7 +20,10 @@ public class DsHikari implements Ds {
         .getLogger(DsHikari.class.getName());
     
     private static final Ds ds = new DsHikari();
+    //environment settings, must set in prod
     private static final String ENV_FILENAME = "hikari.config";
+    //this file will be found in classpath
+    public static final String DEFAULT_CONFIG = "/hikari.properties";
 
     private final DataSource dataSource;
     
@@ -31,13 +34,13 @@ public class DsHikari implements Ds {
     
     private DataSource initDs() {
         
-        HikariConfig config;
         final String fileProp = System.getProperty(ENV_FILENAME);
-        System.getProperties().forEach((v, k) -> {
-            log.debug("{}:{}", v, k);
-        });
-        log.debug("HIKARI:{}", fileProp);
-        config = new HikariConfig(fileProp);
+        log.debug("Hikari config file:{}", fileProp);
+        final HikariConfig config = new HikariConfig(
+            fileProp == null || fileProp.isEmpty() ? 
+                DEFAULT_CONFIG :
+                fileProp
+            );
         return new HikariDataSource(config);
     }
 

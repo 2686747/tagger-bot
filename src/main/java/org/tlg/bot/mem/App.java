@@ -67,9 +67,11 @@ public class App {
 
     private static void initDb()
         throws SQLException, IOException, URISyntaxException {
-        new Db(DsHikari.ds(), Paths
-            .get(App.class.getResource(App.SQL_CREATE_TABLE).toURI()).toFile())
-                .exec();
+        
+        new Db(
+            DsHikari.ds(),
+            App.class.getResourceAsStream(App.SQL_CREATE_TABLE)
+        ).exec();
     }
 
 

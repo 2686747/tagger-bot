@@ -11,8 +11,8 @@ import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.tlg.bot.mem.db.domain.BasePicture;
-import org.tlg.bot.mem.db.domain.TlgMediaType;
 import org.tlg.bot.mem.db.domain.Picture;
+import org.tlg.bot.mem.db.domain.TlgMediaType;
 import org.vmk.db.ds.Ds;
 
 /**

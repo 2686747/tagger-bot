@@ -92,7 +92,7 @@
 							</manifest>
 						</archive>
 						<descriptorRefs>
-							<descriptorRef>jar-with-dependencies</descriptorRef>
+							<descriptorRef>bin</descriptorRef>
 						</descriptorRefs>
 					</configuration>
 				</plugin>
@@ -134,10 +134,6 @@
 		<profile>
 			<!-- Use mvn -Denv=test for activation this profile and use needed properties -->
 			<id>test</id>
-			<properties>
-				<app.config>app.properties</app.config>
-				<hikari.config>hikari.test.properties</hikari.config>
-			</properties>
 			<build>
 				<plugins>
 					<plugin>
@@ -157,6 +153,37 @@
 						</configuration>
 
 					</plugin>
+				</plugins>
+			</build>
+		</profile>
+		<profile>
+			<!-- Use mvn -Denv=test for activation this profile and use needed properties -->
+			<id>prod</id>
+			<build>
+				<plugins>
+					<plugin>
+						<artifactId>maven-assembly-plugin</artifactId>
+						<configuration>
+							<archive>
+								<manifest>
+									<mainClass>org.tlg.bot.mem.App</mainClass>
+								</manifest>
+							</archive>
+							<descriptorRefs>
+								<descriptorRef>jar-with-dependencies</descriptorRef>
+							</descriptorRefs>
+						</configuration>
+						<executions>
+							<execution>
+								<id>make-assembly</id> <!-- this is used for inheritance merges -->
+								<phase>package</phase> <!-- bind to the packaging phase -->
+								<goals>
+									<goal>single</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+
 				</plugins>
 			</build>
 		</profile>
