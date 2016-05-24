@@ -15,11 +15,15 @@ public class MemBot extends TelegramLongPollingBot {
     private static final Logger log = LoggerFactory
         .getLogger(MemBot.class.getName());
 
-    private static final String KEY_TOKEN = "membot.token";
-    private static final String KEY_NAME = "membot.name";
 
+    private final String name;
+    private final String token;
     private final Map<Long, Command> commands = new HashMap<>();
 
+    public MemBot (final String name, final String token) {
+        this.name = name;
+        this.token = token;
+    }
     @Override
     public void onUpdateReceived(final Update update) {
         log.debug("update:{}", update);
@@ -82,12 +86,12 @@ public class MemBot extends TelegramLongPollingBot {
 
     @Override
     public String getBotUsername() {
-        return new AppConfig(MemBot.KEY_NAME).value();
+        return this.name;
     }
 
     @Override
     public String getBotToken() {
-        return new AppConfig(KEY_TOKEN).value();
+        return this.token;
     }
 
 }

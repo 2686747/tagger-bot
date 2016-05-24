@@ -24,7 +24,8 @@ public class App {
 
     private static final Logger log = LoggerFactory
         .getLogger(App.class.getName());
-    
+    public static final String KEY_TOKEN = "membot.token";
+    public static final String KEY_NAME = "membot.name";
     private static final String CMD_DROP_TABLE = "--drop-tables";
     private static final String CMD_WEB_CONSOLE = "--console";
     
@@ -47,7 +48,13 @@ public class App {
         final TelegramBotsApi api = new TelegramBotsApi();
         try {
             log.debug("try register a bot...");
-            api.registerBot(new MemBot());
+            
+            api.registerBot(
+                new MemBot(
+                    new AppConfig(App.KEY_NAME).value(),
+                    new AppConfig(App.KEY_TOKEN).value()
+                    )
+                );
             log.debug("bot registered");
         } catch (final TelegramApiException e) {
             e.printStackTrace();

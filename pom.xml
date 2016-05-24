@@ -4,8 +4,9 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.telegram</groupId>
 	<artifactId>taggerbot</artifactId>
-	<version>0.2016.523.2121-SNAPSHOT</version>
+	<version>0.${project.version.build}-SNAPSHOT</version>
 	<properties>
+		<project.version.build>2016.523.2121</project.version.build>
 		<telegrambots.version>v2.3.2</telegrambots.version>
 	</properties>
 
@@ -46,10 +47,36 @@
 			<version>1.7.21</version>
 		</dependency>
 		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-simple</artifactId>
-			<version>1.7.21</version>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-slf4j-impl</artifactId>
+			<version>2.5</version>
 		</dependency>
+		<!-- <dependency> -->
+		<!-- <groupId>org.apache.logging.log4j</groupId> -->
+		<!-- <artifactId>log4j-to-slf4j</artifactId> -->
+		<!-- <version>2.5</version> -->
+		<!-- </dependency> -->
+		<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-core</artifactId>
+			<version>2.5</version>
+		</dependency>
+		<dependency>
+			<groupId>com.lmax</groupId>
+			<artifactId>disruptor</artifactId>
+			<version>3.3.4</version>
+		</dependency>
+
+		<!-- <dependency> -->
+		<!-- <groupId>org.apache.logging.log4j</groupId> -->
+		<!-- <artifactId>slf4j-impl</artifactId> -->
+		<!-- <version>2.0-alpha2</version> -->
+		<!-- </dependency> -->
+		<!-- <dependency> -->
+		<!-- <groupId>org.slf4j</groupId> -->
+		<!-- <artifactId>slf4j-simple</artifactId> -->
+		<!-- <version>1.7.21</version> -->
+		<!-- </dependency> -->
 		<dependency>
 			<groupId>org.glassfish</groupId>
 			<artifactId>javax.json</artifactId>
@@ -187,5 +214,57 @@
 				</plugins>
 			</build>
 		</profile>
+
+		<profile>
+			<!-- Change version accordingly a build time -->
+			<id>version</id>
+			<properties>
+			<project.version.build>${version.timestamp}</project.version.build>
+			</properties>
+			<build>
+
+				<plugins>
+					<plugin>
+						<groupId>org.codehaus.mojo</groupId>
+						<artifactId>build-helper-maven-plugin</artifactId>
+						<version>1.10</version>
+
+						<executions>
+							<execution>
+								<id>timestamp-property</id>
+								<goals>
+									<goal>timestamp-property</goal>
+								</goals>
+								<configuration>
+<!-- 									<name>project.version.build</name> -->
+									<name>version.timestamp</name>
+									<pattern>yyyy.Md.Hm</pattern>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+					<plugin>
+						<artifactId>maven-antrun-plugin</artifactId>
+						<version>1.8</version>
+						<executions>
+							<execution>
+								<phase>compile</phase>
+								<configuration>
+									<target>
+
+										<echo message="version.timestamp:${version.timestamp}" />
+
+									</target>
+								</configuration>
+								<goals>
+									<goal>run</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+
 	</profiles>
 </project>

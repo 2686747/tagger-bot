@@ -32,20 +32,20 @@ public class MemBotTest {
     }
 	@Test
 	public void testGetBotUsername() {
-	    log.debug("username:{}", new MemBot().getBotUsername());
+	    log.debug("username:{}", new AppConfig(App.KEY_NAME).value());
 		MatcherAssert.assertThat(
 			"Username is null or emtpy",
-			new MemBot().getBotUsername(),
+			new AppConfig(App.KEY_NAME).value(),
 			Matchers.not(Matchers.isEmptyOrNullString())
 		);
 	}
 
 	@Test
 	public void testGetBotToken() {
-	    log.debug("token:{}", new MemBot().getBotToken());
+	    log.debug("token:{}", new AppConfig(App.KEY_TOKEN).value());
 	      MatcherAssert.assertThat(
 	            "Username is null or emtpy",
-	            new MemBot().getBotToken(),
+	            new AppConfig(App.KEY_TOKEN).value(),
 	            Matchers.not(Matchers.isEmptyOrNullString())
 	        );
 	}
@@ -53,7 +53,10 @@ public class MemBotTest {
 	@Test
 	public void unrecognizedTextIsHelpCommand() {
 	    final AtomicBoolean succ = new AtomicBoolean(false);
-	    final MemBot bot = new MemBot() {
+	    final MemBot bot = new MemBot(
+	        new AppConfig(App.KEY_NAME).value(),
+	        new AppConfig(App.KEY_TOKEN).value()
+	        ) {
 
             @Override
             void execute(final Command command) {

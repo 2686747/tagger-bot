@@ -33,7 +33,7 @@ public class AppConfig {
         final String fileRes = (fileProp == null || fileProp.isEmpty()) ?
             DEFAULT_FILEPROP :
             fileProp;
-        log.debug("app.config:{}", fileRes);
+        log.debug("used app.config:{}", fileRes);
         try (final InputStream is = Paths.get(fileRes).toFile().isFile() ? 
             new FileInputStream(Paths.get(fileRes).toFile()) :
             AppConfig.class.getResourceAsStream(fileRes)) {
@@ -46,10 +46,5 @@ public class AppConfig {
         }
         return props.getProperty(property);
     }
-    
-    public static void main(final String[] args) {
-        System.out.println(new AppConfig("membot.token").value());
-    }
-    
 
 }
