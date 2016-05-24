@@ -1,4 +1,5 @@
 #Tagger bot
+[![Telegram](http://trellobot.doomdns.org/telegrambadge.svg)](https://telegram.me/JavaBotsApi)
 
 ##Description
 Telegram bot is used for tagging media files for quick sending it in a chat.
@@ -9,7 +10,7 @@ Bot tags your photos and stickers. Just send photo or media to the bot and he wi
 * Java SE 8;
 * [Telegram Bot Java Library](https://github.com/rubenlagus/TelegramBots)
 * Database: [H2](http://h2database.com/html/main.html), [HikariCP](https://github.com/brettwooldridge/HikariCP), simple JDBC
-* [Slf4j](http://www.slf4j.org/) as logger
+* [log4j2](http://logging.apache.org/log4j/2.x/) as logger
 
 
 ## License 
