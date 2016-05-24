@@ -15,10 +15,10 @@ public class BasePicture implements Picture{
     
 
     public BasePicture(
-        final Integer userId, final String photoId, final TlgMediaType type
+        final Integer userId, final String fileId, final TlgMediaType type
         ) {
         this.userId = userId;
-        this.photoId = photoId;
+        this.photoId = fileId;
         this.type = type;
     }
     

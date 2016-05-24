@@ -64,9 +64,9 @@ public class SearchMediaCommand extends  ExecuteCommand {
             log.debug("answer:{}", answer);
             sender.answerInlineQuery(answer);
         } catch (final SQLException e) {
-            log.debug("Can't found photos", e);
+            log.error("Can't found photos", e);
         } catch (final TelegramApiException e) {
-            log.debug("Can't send answer", e);
+            log.error(e.getApiResponse(), e);
         }
     }
 

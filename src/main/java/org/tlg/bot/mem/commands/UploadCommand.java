@@ -3,20 +3,21 @@
  */
 package org.tlg.bot.mem.commands;
 
-import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.telegram.telegrambots.TelegramApiException;
 import org.telegram.telegrambots.api.objects.Message;
 import org.telegram.telegrambots.api.objects.PhotoSize;
-import org.telegram.telegrambots.api.objects.Sticker;
 import org.telegram.telegrambots.api.objects.Update;
 import org.tlg.bot.mem.MemBot;
 import org.tlg.bot.mem.db.RepTags;
 import org.tlg.bot.mem.db.domain.MediaTags;
+import org.tlg.bot.mem.db.domain.Picture;
 import org.tlg.bot.mem.db.domain.Tags;
+import org.tlg.bot.mem.db.domain.TlgDocumentVideo;
 import org.tlg.bot.mem.db.domain.TlgPhoto;
 import org.tlg.bot.mem.db.domain.TlgSticker;
+import org.tlg.bot.mem.db.domain.TlgVideo;
 import org.tlg.bot.mem.db.ds.DsHikari;
 import org.tlg.bot.mem.msg.TextMessage;
 
@@ -69,7 +70,7 @@ public class UploadCommand implements Command {
         if (update.getMessage().hasText()) {
             final Tags tags = new Tags(update.getMessage().getText());
             if (!tags.isEmpty()) {
-                savePicture(this.message, tags);
+                processMessage(this.message, tags);
                 try {
                     sender.sendMessage(
                         new TextMessage(
@@ -88,55 +89,51 @@ public class UploadCommand implements Command {
         
     }
 
-    private void savePicture(final Message message, final Tags tags) {
+    private void processMessage(final Message message, final Tags tags) {
      
         if (message.getPhoto() != null) {
-            savePhoto(message.getPhoto(), tags);
+            saveMedia(photo(message), tags);
             return;
         }
         if (message.getSticker() != null) {
-            saveSticker(message.getSticker(), tags);
+            saveMedia(
+                new TlgSticker(
+                    message.getFrom().getId(),
+                    message.getSticker().getFileId()),
+                tags);
             return;
         }
- 
-    }
-
-    private void saveSticker(final Sticker sticker, final Tags tags) {
-        try {
-            
-            final TlgSticker photo =
-                new TlgSticker(message.getFrom().getId(), sticker.getFileId());
-//            log.debug("Try save photo:{}", photo);
-//            new RepPhotos(DsHikari.ds()).save(photo);
-            log.debug("Try save tags:{}", tags);
-            new RepTags(DsHikari.ds()).save(
-                new MediaTags(photo, tags)
-                );
-        } catch (final Exception e) {
-            log.error("Can't save photo", e);
+        
+        if (message.getVideo() != null) {
+            saveMedia(new TlgVideo(message), tags);
+            return;
+        }
+        
+        //forwarded media sent as document
+        if (message.getDocument() != null) {
+            saveMedia(new TlgDocumentVideo(message), tags);
         }
         
     }
 
-    private void savePhoto(final List<PhotoSize> photos, final Tags tags) {
-        //first photoId will be saved, size doesn't matter
-        final PhotoSize ps = photos.iterator().next();
-            try {
-               
-                final TlgPhoto photo =
-                    new TlgPhoto(ps, message.getFrom().getId());
-//                log.debug("Try save photo:{}", photo);
-//                new RepPhotos(DsHikari.ds()).save(photo);
-                log.debug("Try save tags:{}", tags);
-                new RepTags(DsHikari.ds()).save(
-                    new MediaTags(photo, tags)
-                    );
-            } catch (final Exception e) {
-                log.error("Can't save photo", e);
-            }
+    private Picture photo(final Message message) {
+        //original(it seems like last) photoId will be saved
+        final PhotoSize ps =
+            message.getPhoto().get(message.getPhoto().size() - 1);
+        return new TlgPhoto(ps, message.getFrom().getId());
         
     }
 
-
+    private void saveMedia(final Picture media, final Tags tags) {
+        try {
+            log.debug("Try save tags [{}] for media", tags, media);
+            new RepTags(DsHikari.ds()).save(
+                new MediaTags(media, tags)
+                );
+        } catch (final Exception e) {
+            log.error("Can't save media", e);
+        }
+        
+    }
 
 }

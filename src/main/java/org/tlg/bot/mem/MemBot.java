@@ -27,6 +27,7 @@ public class MemBot extends TelegramLongPollingBot {
     @Override
     public void onUpdateReceived(final Update update) {
         log.debug("update:{}", update);
+        
         // process if this somebody answer
         if (update.hasMessage()) {
             processAsMessage(update);

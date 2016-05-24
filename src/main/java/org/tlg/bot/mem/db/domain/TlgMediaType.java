@@ -14,7 +14,8 @@ public enum TlgMediaType {
     STICKER(2),
     GIF(3),
     VIDEO(4),
-    AUDIO(5);
+    AUDIO(5),
+    DOCUMENT(6);
     
     private final Byte type;
     

@@ -41,12 +41,12 @@ public class CommandProcessor {
             return new HelpCommand(message.getChatId());
         }
         // if this is photo or sticker
-        if (message.getSticker() != null || !message.getPhoto().isEmpty()) {
+//        if (message.getSticker() != null || !message.getPhoto().isEmpty() || message.getVideo() != null) {
             return new UploadCommand(message);
-        }
-
+//        }
+     
         // if message was not processed
-        return new HelpCommand(this.update.getMessage().getChatId());
+//        return new HelpCommand(this.update.getMessage().getChatId());
 
     }
 
