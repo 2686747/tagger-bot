@@ -17,6 +17,7 @@ import org.tlg.bot.mem.db.ds.DsHikari;
 import org.vmk.db.Db;
 
 /**
+ * App starter.
  * @author "Maksim Vakhnik"
  *
  */

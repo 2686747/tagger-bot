@@ -6,6 +6,11 @@ import org.telegram.telegrambots.TelegramApiException;
 import org.tlg.bot.mem.MemBot;
 import org.tlg.bot.mem.msg.HelpMessage;
 
+/**
+ * Help response.
+ * @author "Maksim Vakhnik"
+ *
+ */
 public class HelpCommand extends ExecuteCommand {
     private static final Logger log = LoggerFactory
         .getLogger(HelpCommand.class.getName());
