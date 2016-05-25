@@ -24,7 +24,8 @@ public class App {
 
     private static final Logger log = LoggerFactory
         .getLogger(App.class.getName());
-    
+    public static final String KEY_TOKEN = "membot.token";
+    public static final String KEY_NAME = "membot.name";
     private static final String CMD_DROP_TABLE = "--drop-tables";
     private static final String CMD_WEB_CONSOLE = "--console";
     
@@ -45,13 +46,23 @@ public class App {
             return;
         }
         final TelegramBotsApi api = new TelegramBotsApi();
-        try {
-            log.debug("try register a bot...");
-            api.registerBot(new MemBot());
-            log.debug("bot registered");
-        } catch (final TelegramApiException e) {
-            e.printStackTrace();
-        }
+        //some exception just restart bot
+            try {
+                log.debug("try register a bot...");
+                
+                api.registerBot(
+                    new MemBot(
+                        new AppConfig(App.KEY_NAME).value(),
+                        new AppConfig(App.KEY_TOKEN).value()
+                        )
+                    );
+                log.debug("bot registered");
+            } catch (final TelegramApiException e) {
+                log.error(e.getApiResponse(), e);
+            } catch (final Throwable e) {
+                log.error("Bot is failed", e);
+            }
+
     }
 
     private static boolean hasArgument(final String cmd, final String... args) {
@@ -67,9 +78,11 @@ public class App {
 
     private static void initDb()
         throws SQLException, IOException, URISyntaxException {
-        new Db(DsHikari.ds(), Paths
-            .get(App.class.getResource(App.SQL_CREATE_TABLE).toURI()).toFile())
-                .exec();
+        
+        new Db(
+            DsHikari.ds(),
+            App.class.getResourceAsStream(App.SQL_CREATE_TABLE)
+        ).exec();
     }
 
 

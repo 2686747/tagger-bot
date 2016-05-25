@@ -4,15 +4,15 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.telegram</groupId>
 	<artifactId>taggerbot</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.2016.524.2226-SNAPSHOT</version>
 	<properties>
 		<telegrambots.version>v2.3.2</telegrambots.version>
 	</properties>
-	
+
 	<parent>
-	  <groupId>org.tlg.bot</groupId>
-  <artifactId>parent</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
+		<groupId>org.tlg.bot</groupId>
+		<artifactId>parent</artifactId>
+		<version>0.0.1-SNAPSHOT</version>
 	</parent>
 
 	<repositories>
@@ -32,13 +32,13 @@
 		<dependency>
 			<groupId>org.telegram</groupId>
 			<artifactId>telegrambots</artifactId>
-<!-- 			<version>${telegrambots.version}</version> -->
+			<!-- <version>${telegrambots.version}</version> -->
 		</dependency>
-<!-- 		<dependency> -->
-<!-- 			<groupId>com.github.rubenlagus</groupId> -->
-<!-- 			<artifactId>TelegramBots</artifactId> -->
-<!-- 			<version>${telegrambots.version}</version> -->
-<!-- 		</dependency> -->
+		<!-- <dependency> -->
+		<!-- <groupId>com.github.rubenlagus</groupId> -->
+		<!-- <artifactId>TelegramBots</artifactId> -->
+		<!-- <version>${telegrambots.version}</version> -->
+		<!-- </dependency> -->
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
@@ -57,9 +57,19 @@
 			<version>1.7.21</version>
 		</dependency>
 		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-simple</artifactId>
-			<version>1.7.21</version>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-slf4j-impl</artifactId>
+			<version>2.5</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-core</artifactId>
+			<version>2.5</version>
+		</dependency>
+		<dependency>
+			<groupId>com.lmax</groupId>
+			<artifactId>disruptor</artifactId>
+			<version>3.3.4</version>
 		</dependency>
 		<dependency>
 			<groupId>org.glassfish</groupId>
@@ -99,14 +109,14 @@
 					<version>1.5.0</version>
 				</plugin>
 				<plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-compiler-plugin</artifactId>
-                    <configuration>
-                        <source>1.8</source>
-                        <target>1.8</target>
-                        <encoding>UTF-8</encoding>
-                    </configuration>
-                </plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-compiler-plugin</artifactId>
+					<configuration>
+						<source>1.8</source>
+						<target>1.8</target>
+						<encoding>UTF-8</encoding>
+					</configuration>
+				</plugin>
 			</plugins>
 		</pluginManagement>
 	</build>

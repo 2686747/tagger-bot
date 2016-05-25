@@ -3,11 +3,12 @@
  */
 package org.tlg.bot.mem;
 
-import java.io.IOException;
-import java.nio.file.Files;
+import java.io.FileInputStream;
+import java.io.InputStream;
 import java.nio.file.Paths;
-import java.nio.file.StandardOpenOption;
 import java.util.Properties;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Configuration class
@@ -16,26 +17,34 @@ import java.util.Properties;
  */
 public class AppConfig {
 
-    private static final String PROP_FILE = "app.properties";
+    private static final Logger log = LoggerFactory
+        .getLogger(AppConfig.class.getName());
+    
+    private static final String ENV_PROPFILE = "app.config";
+    private static final String DEFAULT_FILEPROP = "/app.properties";
     private final String property;
     public AppConfig(final String property) {
         this.property = property;
     }
     public String value() {
         final Properties props = new Properties();
-        try {
-            props.load(
-                Files.newInputStream(
-                    Paths.get(PROP_FILE),
-                    StandardOpenOption.READ
-                )
-            );
-        } catch (final IOException e) {
-            e.printStackTrace();
+        final String fileProp = System.getProperty(ENV_PROPFILE);
+        log.debug("environment app.config:{}", fileProp);
+        final String fileRes = (fileProp == null || fileProp.isEmpty()) ?
+            DEFAULT_FILEPROP :
+            fileProp;
+        log.debug("used app.config:{}", fileRes);
+        try (final InputStream is = Paths.get(fileRes).toFile().isFile() ? 
+            new FileInputStream(Paths.get(fileRes).toFile()) :
+            AppConfig.class.getResourceAsStream(fileRes)) {
+            
+        
+            props.load(is);
+        } catch (final Throwable e) {
+            log.error("Can't load properties from resource [{}]", fileRes);
+            throw new RuntimeException(e);
         }
         return props.getProperty(property);
     }
-    
-    
 
 }

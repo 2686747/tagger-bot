@@ -27,10 +27,12 @@ public class Conversation {
     private final RequestResult requestResult;
     private final List<RequestResult> answers;
 
+    private final Integer chatId;
     public Conversation(final MemBot bot, final RequestResult requestResult) {
         this.bot = bot;
         this.requestResult = requestResult;
         this.answers = new ArrayList<>();
+        this.chatId = requestResult.chatId();
         bot.answerAwait(this, requestResult);
 
     }
@@ -58,7 +60,19 @@ public class Conversation {
             if (update.hasMessage()) {
                 processAsMessage(update);
             }
+            return;
         }
+        
+        //else ask for tags
+        this.bot.answerAwait(this, result);
+//        if (updates.size() > 0) {
+//            final Update update = updates.iterator().next();
+//            if (update.hasMessage()) {
+//                processAsMessage(update);
+//            }
+//        }
+        //if some media for storage - start saving
+        
         
     }
 
