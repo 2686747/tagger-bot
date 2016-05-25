@@ -19,6 +19,7 @@ import org.tlg.bot.mem.db.domain.TlgMediaType;
 import org.vmk.db.ds.Ds;
 
 /**
+ * Save tags.
  * @author "Maksim Vakhnik"
  *
  */
