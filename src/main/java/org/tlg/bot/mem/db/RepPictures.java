@@ -16,6 +16,7 @@ import org.tlg.bot.mem.db.domain.TlgMediaType;
 import org.vmk.db.ds.Ds;
 
 /**
+ * Saves pictures.
  * @author "Maksim Vakhnik"
  *
  */
