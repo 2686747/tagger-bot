@@ -106,8 +106,6 @@ public class UploadCommand implements Command {
             
             final TlgSticker photo =
                 new TlgSticker(message.getFrom().getId(), sticker.getFileId());
-//            log.debug("Try save photo:{}", photo);
-//            new RepPhotos(DsHikari.ds()).save(photo);
             log.debug("Try save tags:{}", tags);
             new RepTags(DsHikari.ds()).save(
                 new MediaTags(photo, tags)
@@ -125,8 +123,6 @@ public class UploadCommand implements Command {
                
                 final TlgPhoto photo =
                     new TlgPhoto(ps, message.getFrom().getId());
-//                log.debug("Try save photo:{}", photo);
-//                new RepPhotos(DsHikari.ds()).save(photo);
                 log.debug("Try save tags:{}", tags);
                 new RepTags(DsHikari.ds()).save(
                     new MediaTags(photo, tags)
