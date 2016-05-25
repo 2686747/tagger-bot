@@ -39,10 +39,7 @@ public class InlineQueryResultCachedTlgMedia {
             .setGifFileId(picture.getFileId())
             .setId(String.valueOf(System.nanoTime()));
           //TODO do video processing
-//        case VIDEO:
-//            return new InlineQueryResultCachedVideo()
-//            .setTitle(picture.getFileId())
-//            .setId(String.valueOf(System.nanoTime()));
+
           //TODO  document processing
           //TODO  audio processing
         default:
