@@ -45,6 +45,31 @@ public class Tags {
     public boolean isEmpty() {
         return this.tags.isEmpty();
     }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((tags == null) ? 0 : tags.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(final Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (!(obj instanceof Tags))
+            return false;
+        final Tags other = (Tags) obj;
+        if (tags == null) {
+            if (other.tags != null)
+                return false;
+        } else if (!tags.containsAll(other.tags))
+            return false;
+        return true;
+    }
     
     
 }

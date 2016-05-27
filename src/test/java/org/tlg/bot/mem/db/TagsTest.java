@@ -3,6 +3,7 @@
  */
 package org.tlg.bot.mem.db;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -35,6 +36,24 @@ public class TagsTest {
         new DbTest(DsHikari.ds()).create();
     }
 
+    @Test
+    public void updateTags() throws SQLException {
+        final Integer userId = 1;
+        final Picture saved1 = new BasePicture(userId, "1", TlgMediaType.PHOTO);
+        final String tag1 = "tag1";
+        final Tags tags1 = new Tags(tag1 + " tag2 tag3");
+        final String tag2 = "newTag1";
+        final Tags tags2 = new Tags(tag2 + " newTag2 newTag3");
+        final MediaTags mTagsOrig = new MediaTags(saved1, tags1);
+        final RepTags repTags = new RepTags(DsHikari.ds());
+        repTags.save(mTagsOrig);
+        final MediaTags mTagsUpdated = new MediaTags(saved1, tags2);;
+        repTags.update(mTagsUpdated);
+        final Collection<String> testTags = repTags.findTagsByFileId(saved1);
+        
+        assertEquals("New tags is not as expected", tags2.getTags(), testTags);
+        
+    }
     @Test
     public void saveTwoPhotoFindByTagShouldFindOne() throws SQLException {
 
