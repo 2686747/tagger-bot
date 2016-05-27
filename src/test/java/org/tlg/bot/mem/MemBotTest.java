@@ -1,35 +1,23 @@
 package org.tlg.bot.mem;
 
 import static org.junit.Assert.fail;
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.sql.SQLException;
 import java.util.concurrent.atomic.AtomicBoolean;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.json.JSONObject;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.telegram.telegrambots.api.objects.Update;
 import org.tlg.bot.mem.commands.Command;
 import org.tlg.bot.mem.commands.HelpCommand;
-import org.tlg.bot.mem.db.ds.DsHikari;
-import org.tlg.bot.mem.db.init.DbTest;
 
 public class MemBotTest {
 
     private static final Logger log = LoggerFactory
         .getLogger(MemBotTest.class.getName());
     
-
-    @Before
-    public void setUp()
-        throws SQLException, IOException, URISyntaxException {
-        new DbTest(DsHikari.ds()).create();
-    }
 	@Test
 	public void testGetBotUsername() {
 	    log.debug("username:{}", new AppConfig(App.KEY_NAME).value());

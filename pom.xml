@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.telegram</groupId>
 	<artifactId>taggerbot</artifactId>
-	<version>0.2016.528.057-SNAPSHOT</version>
+	<version>0.2016.528.124-SNAPSHOT</version>
 	<properties>
 		<telegrambots.version>v2.3.2</telegrambots.version>
 	</properties>
@@ -183,7 +183,7 @@
 						<configuration>
 							<archive>
 								<manifestEntries>
-									<Version>${version}</Version>
+									<Version>${project.version}</Version>
 								</manifestEntries>
 								<manifest>
 									<useUniqueVersions>true</useUniqueVersions>
