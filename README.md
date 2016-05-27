@@ -1,4 +1,4 @@
-#Tagger bot
+#Telegram bot: TaggerBot
 [![Telegram](http://trellobot.doomdns.org/telegrambadge.svg)](https://telegram.me/JavaBotsApi)
 
 ##Description
