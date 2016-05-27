@@ -4,6 +4,7 @@
 package org.tlg.bot.mem.db.domain;
 
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -17,8 +18,13 @@ public class Tags {
     //tags splitted by this
     private static final String DELIM = " ";
     private final Set<String> tags;
+    
     public Tags(final String tags) {
-        this.tags = Tags.tags(tags);
+        this(Tags.tags(tags));
+    }
+    
+    public Tags(final Collection<String> tags) {
+        this.tags = new LinkedHashSet<>(tags);
     }
     
     public Set<String> getTags() {
@@ -42,6 +48,18 @@ public class Tags {
         return builder.toString();
     }
 
+    
+    public String asStringRow() {
+        final StringBuilder builder = new StringBuilder();
+        if (!this.tags.isEmpty()) {
+            this.tags.forEach(tag -> {
+                builder.append(tag).append(DELIM);
+            });
+            builder.setLength(builder.length() - DELIM.length());
+        }
+        return builder.toString();
+    }
+    
     public boolean isEmpty() {
         return this.tags.isEmpty();
     }

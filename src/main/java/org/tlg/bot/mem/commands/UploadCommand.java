@@ -3,8 +3,8 @@
  */
 package org.tlg.bot.mem.commands;
 
-import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.telegram.telegrambots.TelegramApiException;
@@ -90,17 +90,14 @@ public class UploadCommand implements Command {
 
         if (media != null) {
             // if is stored already
-            Collection<String> tags;
-            tags = new RepTags(DsHikari.ds()).findTagsByFileId(media);
-            if (!tags.isEmpty()) {
+            
+            final Optional<Tags> tags = new RepTags(DsHikari.ds()).findTagsByFileId(media);
+            if (!tags.isPresent()) {
 
                 final StringBuilder resp = new StringBuilder("This ")
                     .append(mediaName).append(" is already stored with tags:\n")
                     .append("<b>");
-
-                tags.forEach(tag -> {
-                    resp.append(tag).append(" ");
-                });
+                resp.append(tags.get().asStringRow());
                 resp.append("</b>\n").append("Please input new tags.");
                 return resp.toString();
             } else {

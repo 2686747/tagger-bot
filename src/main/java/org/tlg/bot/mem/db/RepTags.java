@@ -9,6 +9,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.tlg.bot.mem.db.domain.BasePicture;
@@ -87,7 +88,7 @@ public class RepTags {
 //        }
     }
 
-    public Collection<String> findTagsByFileId(final Picture media)
+    public Optional<Tags> findTagsByFileId(final Picture media)
         throws SQLException {
         final Collection<String> result = new ArrayList<>();
         try (final Connection conn = ds.dataSource().getConnection()) {
@@ -102,9 +103,11 @@ public class RepTags {
             while (rs.next()) {
                 result.add(rs.getString("tag_id"));
             }
-
+            
         }
-        return result;
+        return !result.isEmpty() ?
+            Optional.of(new Tags(result)) :
+            Optional.empty();
     }
 
     public Collection<Picture> findByTags(final Tags tags, final Integer userId)
