@@ -5,6 +5,7 @@ package org.tlg.bot.mem.db;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -38,6 +39,46 @@ public class TagsTest {
         new DbTest(DsHikari.ds()).create();
     }
 
+    @Test
+    public void isSavedTestShouldPresent() throws SQLException {
+
+        final Integer userId = 1;
+        final Picture saved1 = new BasePicture(userId, "1", TlgMediaType.PHOTO);
+        final Picture saved2 = new BasePicture(userId, "2", TlgMediaType.PHOTO);
+        final String tag1 = "tag1";
+        final Tags tags1 = new Tags(tag1 + " tag2 tag3");
+        final Tags tags2 = new Tags("tag2 tag3");
+        final MediaTags pht1 = new MediaTags(saved1, tags1);
+        final MediaTags pht2 = new MediaTags(saved2, tags2);
+        new RepTags(DsHikari.ds()).save(pht1);
+        new RepTags(DsHikari.ds()).save(pht2);
+        assertTrue(
+            "Saved picture returns as not present",
+            new RepTags(DsHikari.ds()).isSaved(saved1)
+        );
+        assertTrue(
+            "Saved picture returns as not present",
+            new RepTags(DsHikari.ds()).isSaved(saved2)
+        );
+    }
+    
+    @Test
+    public void isSavedTestShouldNotPresent() throws SQLException {
+
+        final Integer userId = 1;
+        final Picture saved1 = new BasePicture(userId, "1", TlgMediaType.PHOTO);
+        final Picture saved2 = new BasePicture(userId, "2", TlgMediaType.PHOTO);
+        final String tag1 = "tag1";
+        final Tags tags1 = new Tags(tag1 + " tag2 tag3");
+        final Tags tags2 = new Tags("tag2 tag3");
+        final MediaTags pht1 = new MediaTags(saved1, tags1);
+        new RepTags(DsHikari.ds()).save(pht1);
+        assertFalse(
+            "Unsaved picture returns as  present",
+            new RepTags(DsHikari.ds()).isSaved(saved2)
+        );
+    }
+    
     @Test
     public void updateTags() throws SQLException {
         final Integer userId = 1;

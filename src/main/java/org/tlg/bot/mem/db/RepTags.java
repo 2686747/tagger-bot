@@ -119,9 +119,6 @@ public class RepTags {
             final String OR = " OR ";
             final String AND = " AND ";
             tags.getTags().forEach(tag -> {
-
-            });
-            tags.getTags().forEach(tag -> {
                 sql.append("tag_id LIKE ? ");
                 sql.append(OR);
             });
@@ -145,6 +142,19 @@ public class RepTags {
         }
     }
 
+    public boolean isSaved(final Picture media) throws SQLException {
+        try (final Connection conn = ds.dataSource().getConnection()) {
+            final StringBuilder sql = new StringBuilder(
+                "SELECT 1 FROM ").append(MediaTags.TABLE)
+                .append(" WHERE user_id = ? AND photo_id = ?");
+            final PreparedStatement ps = conn.prepareStatement(sql.toString());
+            ps.setInt(1, media.getUserId());
+            ps.setString(2, media.getFileId());
+            final ResultSet rs = ps.executeQuery();
+            return rs.next();
+        }
+    }
+    
     private static Collection<Picture> rsTags(final ResultSet rs)
         throws SQLException {
         final Collection<Picture> result = new ArrayList<>();

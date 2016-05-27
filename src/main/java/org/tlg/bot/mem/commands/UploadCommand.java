@@ -3,6 +3,7 @@
  */
 package org.tlg.bot.mem.commands;
 
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 import org.slf4j.Logger;
@@ -91,7 +92,8 @@ public class UploadCommand implements Command {
         if (media != null) {
             // if is stored already
             
-            final Optional<Tags> tags = new RepTags(DsHikari.ds()).findTagsByFileId(media);
+            final Optional<Tags> tags =
+                new RepTags(DsHikari.ds()).findTagsByFileId(media);
             if (!tags.isPresent()) {
 
                 final StringBuilder resp = new StringBuilder("This ")
@@ -114,7 +116,8 @@ public class UploadCommand implements Command {
         if (update.getMessage().hasText()) {
             final Tags tags = new Tags(update.getMessage().getText());
             if (!tags.isEmpty()) {
-                savePicture(this.message, tags);
+               
+                saveOrUpdatePicture(this.message, tags);
                 try {
                     sender.sendMessage(
                         new TextMessage(update.getMessage().getChatId(),
@@ -130,7 +133,7 @@ public class UploadCommand implements Command {
 
     }
 
-    private void savePicture(final Message message, final Tags tags) {
+    private void saveOrUpdatePicture(final Message message, final Tags tags) {
 
         if (message.getPhoto() != null) {
             savePhoto(message.getPhoto(), tags);
@@ -149,23 +152,33 @@ public class UploadCommand implements Command {
             final TlgSticker photo = new TlgSticker(message.getFrom().getId(),
                 sticker.getFileId());
             log.debug("Try save tags:{}", tags);
-            new RepTags(DsHikari.ds()).save(new MediaTags(photo, tags));
+            saveUpdate(new MediaTags(photo, tags));
         } catch (final Exception e) {
-            log.error("Can't save photo", e);
+            log.error("Can't save sticker", e);
         }
 
     }
 
     private void savePhoto(final List<PhotoSize> photos, final Tags tags) {
         try {
-
             final TlgPhoto photo = new TlgPhoto(this.message);
             log.debug("Try save tags:{}", tags);
-            new RepTags(DsHikari.ds()).save(new MediaTags(photo, tags));
+            saveUpdate(new MediaTags(photo, tags));
         } catch (final Exception e) {
             log.error("Can't save photo", e);
         }
 
+    }
+
+    private void saveUpdate(final MediaTags tags) throws SQLException {
+        final RepTags repTags = new RepTags(DsHikari.ds());
+        if (repTags.isSaved(tags.getPicture())) {
+            repTags.update(tags);
+        } else {
+            repTags.save(tags);
+        }
+       
+        
     }
 
     @Override
