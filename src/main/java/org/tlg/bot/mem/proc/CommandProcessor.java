@@ -10,6 +10,7 @@ import org.telegram.telegrambots.api.objects.Update;
 import org.tlg.bot.mem.commands.Command;
 import org.tlg.bot.mem.commands.HelpCommand;
 import org.tlg.bot.mem.commands.UploadCommand;
+import org.tlg.bot.mem.commands.VersionCommand;
 
 /**
  * Process udpate object and return needed command.
@@ -36,6 +37,9 @@ public class CommandProcessor {
             // if help
             if (message.getText().startsWith("/help")) {
                 return new HelpCommand(message.getChatId());
+            }
+            if (message.getText().startsWith("/ver")) {
+                return new VersionCommand(message.getChatId());
             }
             //todo reaction to text
             return new HelpCommand(message.getChatId());

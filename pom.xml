@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.telegram</groupId>
 	<artifactId>taggerbot</artifactId>
-	<version>0.2016.526.1054-SNAPSHOT</version>
+	<version>0.2016.527.2012-SNAPSHOT</version>
 	<properties>
 		<telegrambots.version>v2.3.2</telegrambots.version>
 	</properties>
@@ -87,6 +87,13 @@
 			<artifactId>db</artifactId>
 			<version>dev-SNAPSHOT</version>
 		</dependency>
+
+		<dependency>
+			<groupId>com.jcabi</groupId>
+			<artifactId>jcabi-manifests</artifactId>
+			<version>1.1</version>
+		</dependency>
+
 	</dependencies>
 
 	<build>
@@ -175,7 +182,11 @@
 						<artifactId>maven-assembly-plugin</artifactId>
 						<configuration>
 							<archive>
+								<manifestEntries>
+									<Version>${version}</Version>
+								</manifestEntries>
 								<manifest>
+									<useUniqueVersions>true</useUniqueVersions>
 									<mainClass>org.tlg.bot.mem.App</mainClass>
 								</manifest>
 							</archive>
