@@ -2,15 +2,15 @@
 <Configuration status="WARN" monitorInterval="30">
 	<Appenders>
 		<Console name="Console" target="SYSTEM_OUT">
-			<PatternLayout pattern="%d{HH:mm:ss.SSS}{GMT+3} [%t] %-5level %c{1.} - %msg%n" />
+			<PatternLayout pattern="%d{HH:mm:ss.SSS}{GMT+3} %location %-5level %c{1.} - %msg%n" />
 		</Console>
-		<Async name="AsyncConsole">
-			<AppenderRef ref="Console" />
+		<Async name="AsyncConsole" includeLocation="true">
+			<AppenderRef ref="Console"/>
 		</Async>
 	</Appenders>
 	<Loggers>
 		<!-- pattern layout actually uses location, so we need to include it -->
-		<AsyncLogger name="org.tlg" level="debug" additivity="false">
+		<AsyncLogger name="org.tlg" level="debug" additivity="false" includeLocation="true">
 			<AppenderRef ref="AsyncConsole" />
 		</AsyncLogger>
 		<Root level="error">

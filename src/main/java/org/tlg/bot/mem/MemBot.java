@@ -9,21 +9,22 @@ import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.tlg.bot.mem.commands.Command;
 import org.tlg.bot.mem.commands.SearchMediaCommand;
 import org.tlg.bot.mem.proc.CommandProcessor;
+import jersey.repackaged.com.google.common.base.Objects;
 
 public class MemBot extends TelegramLongPollingBot {
 
     private static final Logger log = LoggerFactory
         .getLogger(MemBot.class.getName());
 
-
     private final String name;
     private final String token;
     private final Map<Long, Command> commands = new HashMap<>();
 
-    public MemBot (final String name, final String token) {
+    public MemBot(final String name, final String token) {
         this.name = name;
         this.token = token;
     }
+
     @Override
     public void onUpdateReceived(final Update update) {
         log.debug("update:{}", update);
@@ -39,13 +40,11 @@ public class MemBot extends TelegramLongPollingBot {
     }
 
     private void processAsInlineQuery(final Update update) {
-        if (
-            update.getInlineQuery().getQuery() != null &&
-            !update.getInlineQuery().getQuery().isEmpty()
-            ) {
+        if (update.getInlineQuery().getQuery() != null
+            && !update.getInlineQuery().getQuery().isEmpty()) {
             execute(new SearchMediaCommand(update.getInlineQuery()));
         }
-        
+
     }
 
     private void processAsMessage(final Update update) {
@@ -54,15 +53,15 @@ public class MemBot extends TelegramLongPollingBot {
                 .get(update.getMessage().getChatId());
             resume(command, update);
         } else {
-            final Command command = new CommandProcessor(update)
-                .command();
+            final Command command = new CommandProcessor(update).command();
             this.execute(command);
         }
-        
+
     }
 
     /**
      * Invoked if there is a expectant in queue
+     * 
      * @param command
      * @param update
      */
@@ -73,16 +72,25 @@ public class MemBot extends TelegramLongPollingBot {
 
     /**
      * Execute this command as result of processing {@code Update}.
+     * 
      * @param command
      */
     void execute(final Command command) {
         command.execute(this);
     }
-    
+
+    public void leaveAwaitQueue(final Command command) {
+        this.commands.forEach((chatId, cmd) -> {
+            if (Objects.equal(command, cmd)) {
+                this.commands.remove(chatId, command);
+            }
+        });
+
+    }
+
     public void answerAwait(final Long chatId, final Command waitor) {
         this.commands.put(chatId, waitor);
     }
-
 
     @Override
     public String getBotUsername() {

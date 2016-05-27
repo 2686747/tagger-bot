@@ -8,14 +8,10 @@ import org.telegram.telegrambots.api.methods.send.SendMessage;
  *
  */
 public class TextMessage extends SendMessage {
-    
-    public TextMessage(final String chatId, final String text) {
-        super.setChatId(chatId);
-        super.setText(text);
-    }
 
     public TextMessage(final Long chatId, final String text) {
-        this(String.valueOf(chatId), text);
+        super.setChatId(String.valueOf(chatId));
+        super.setText(text);
     }
 
 

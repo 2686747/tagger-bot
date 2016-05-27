@@ -3,6 +3,7 @@
  */
 package org.tlg.bot.mem.commands;
 
+import java.util.Collection;
 import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,10 +15,12 @@ import org.telegram.telegrambots.api.objects.Update;
 import org.tlg.bot.mem.MemBot;
 import org.tlg.bot.mem.db.RepTags;
 import org.tlg.bot.mem.db.domain.MediaTags;
+import org.tlg.bot.mem.db.domain.Picture;
 import org.tlg.bot.mem.db.domain.Tags;
 import org.tlg.bot.mem.db.domain.TlgPhoto;
 import org.tlg.bot.mem.db.domain.TlgSticker;
 import org.tlg.bot.mem.db.ds.DsHikari;
+import org.tlg.bot.mem.msg.HtmlMessage;
 import org.tlg.bot.mem.msg.TextMessage;
 
 /**
@@ -42,29 +45,74 @@ public class UploadCommand implements Command {
      */
     @Override
     public void execute(final MemBot sender) {
+        sender.answerAwait(message.getChatId(), this);
         try {
-            sender.answerAwait(this.message.getChatId(), this);
             sender.sendMessage(
-                new TextMessage(
-                    message.getChatId(), askTags()
-                    )
-                );
+                new HtmlMessage(message.getChatId(), uploadResponse())
+            );
         } catch (final TelegramApiException e) {
-            log.error("Can't send message", e);
+            log.error(e.getApiResponse(), e);
+            
+            internalError(sender);
+         } catch (final Exception e) {
+           log.error(e.getMessage(), e);
+           internalError(sender);
         }
-
     }
 
-    private String askTags() {
+    private void internalError(final MemBot sender) {
+        sender.leaveAwaitQueue(this);
+       try {
+        sender.sendMessage(
+               new TextMessage(
+                   this.message.getChatId(),
+                   "Sorry, i can't process your media"
+                   )
+               );
+    } catch (final TelegramApiException e) {
+        log.error(e.getApiResponse(), e);
+    }
+        
+    }
+
+    private String uploadResponse() throws Exception {
+        String mediaName = "media";
+        Picture media = null;
+
         if (message.getSticker() != null) {
-            return "Please, input tags for this sticker";
+            mediaName = "sticker";
+            media = new TlgSticker(this.message);
         }
-        return "Please, input tags for this photo";
+        if (message.getPhoto() != null) {
+            mediaName = "photo";
+            media = new TlgPhoto(this.message);
+        }
+
+        if (media != null) {
+            // if is stored already
+            Collection<String> tags;
+            tags = new RepTags(DsHikari.ds()).findTagsByFileId(media);
+            if (!tags.isEmpty()) {
+
+                final StringBuilder resp = new StringBuilder("This ")
+                    .append(mediaName).append(" is already stored with tags:\n")
+                    .append("<b>");
+
+                tags.forEach(tag -> {
+                    resp.append(tag).append(" ");
+                });
+                resp.append("</b>\n").append("Please input new tags.");
+                return resp.toString();
+            } else {
+                return "Please, input tags for this " + mediaName;
+            }
+        }
+        return "Sorry. Such media is not supported yet.";
     }
 
     @Override
     public void resume(final MemBot sender, final Update update) {
-   
+
         // if tags are correct - save picture
         if (update.getMessage().hasText()) {
             final Tags tags = new Tags(update.getMessage().getText());
@@ -72,24 +120,21 @@ public class UploadCommand implements Command {
                 savePicture(this.message, tags);
                 try {
                     sender.sendMessage(
-                        new TextMessage(
-                            update.getMessage().getChatId(),
-                            "Picture is saved successfully" 
-                            )
-                        );
+                        new TextMessage(update.getMessage().getChatId(),
+                            "Picture is saved successfully"));
                 } catch (final TelegramApiException e) {
                     log.error("Can't send message", e);
                 }
             } else {
-             // else add itself to queue and wait for correct tags
-                sender.answerAwait(update.getMessage().getChatId(), this);
+                // else add itself to queue and wait for correct tags
+                sender.answerAwait(message.getChatId(), this);
             }
         }
-        
+
     }
 
     private void savePicture(final Message message, final Tags tags) {
-     
+
         if (message.getPhoto() != null) {
             savePhoto(message.getPhoto(), tags);
             return;
@@ -98,41 +143,41 @@ public class UploadCommand implements Command {
             saveSticker(message.getSticker(), tags);
             return;
         }
- 
+
     }
 
     private void saveSticker(final Sticker sticker, final Tags tags) {
         try {
-            
-            final TlgSticker photo =
-                new TlgSticker(message.getFrom().getId(), sticker.getFileId());
+
+            final TlgSticker photo = new TlgSticker(message.getFrom().getId(),
+                sticker.getFileId());
             log.debug("Try save tags:{}", tags);
-            new RepTags(DsHikari.ds()).save(
-                new MediaTags(photo, tags)
-                );
+            new RepTags(DsHikari.ds()).save(new MediaTags(photo, tags));
         } catch (final Exception e) {
             log.error("Can't save photo", e);
         }
-        
+
     }
 
     private void savePhoto(final List<PhotoSize> photos, final Tags tags) {
-        //first photoId will be saved, size doesn't matter
-        final PhotoSize ps = photos.iterator().next();
-            try {
-               
-                final TlgPhoto photo =
-                    new TlgPhoto(ps, message.getFrom().getId());
-                log.debug("Try save tags:{}", tags);
-                new RepTags(DsHikari.ds()).save(
-                    new MediaTags(photo, tags)
-                    );
-            } catch (final Exception e) {
-                log.error("Can't save photo", e);
-            }
-        
+        try {
+
+            final TlgPhoto photo = new TlgPhoto(this.message);
+            log.debug("Try save tags:{}", tags);
+            new RepTags(DsHikari.ds()).save(new MediaTags(photo, tags));
+        } catch (final Exception e) {
+            log.error("Can't save photo", e);
+        }
+
     }
 
-
+    @Override
+    public String toString() {
+        final StringBuilder builder = new StringBuilder();
+        builder.append("UploadCommand [message=");
+        builder.append(message);
+        builder.append("]");
+        return builder.toString();
+    }
 
 }

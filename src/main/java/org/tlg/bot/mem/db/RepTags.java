@@ -55,6 +55,25 @@ public class RepTags {
 
     }
 
+    public Collection<String> findTagsByFileId(final Picture media) throws SQLException {
+        final Collection<String> result = new ArrayList<>();
+        try (final Connection conn = ds.dataSource().getConnection()) {
+            final StringBuilder sql = new StringBuilder(
+                "SELECT DISTINCT tag_id FROM  "
+                );
+            sql.append(MediaTags.TABLE)
+            .append(" WHERE user_id = ? AND photo_id = ?");
+            final PreparedStatement ps = conn.prepareStatement(sql.toString());
+            ps.setInt(1, media.getUserId());
+            ps.setString(2, media.getFileId());
+            final ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+               result.add(rs.getString("tag_id"));
+            }
+            
+        }    
+        return result;
+    }
     public Collection<Picture> findByTags(final Tags tags, final Integer userId)
         throws SQLException {
         try (final Connection conn = ds.dataSource().getConnection()) {

@@ -3,6 +3,7 @@
  */
 package org.tlg.bot.mem.db;
 
+import static org.junit.Assert.fail;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.sql.SQLException;
@@ -40,11 +41,9 @@ public class TagsTest {
         final Integer userId = 1;
         final Picture saved1 = new BasePicture(userId, "1", TlgMediaType.PHOTO);
         final Picture saved2 = new BasePicture(userId, "2", TlgMediaType.PHOTO);
-        // new RepPhotos(DsHikari.ds()).save(saved1);
-        // new RepPhotos(DsHikari.ds()).save(saved2);
         final String tag1 = "tag1";
-        final Tags tags1 = new Tags(tag1 + ".tag2.tag3");
-        final Tags tags2 = new Tags("tag2.tag3");
+        final Tags tags1 = new Tags(tag1 + " tag2 tag3");
+        final Tags tags2 = new Tags("tag2 tag3");
         final Tags srchTag = new Tags(tag1);
         final MediaTags pht1 = new MediaTags(saved1, tags1);
         final MediaTags pht2 = new MediaTags(saved2, tags2);
@@ -58,6 +57,49 @@ public class TagsTest {
             photos.iterator().next(), Matchers.equalTo(saved1));
     }
 
+
+    @Test
+    public void findTagsForSavedPhoto() throws SQLException {
+
+        final Integer userId = 1;
+        final Picture saved1 = new BasePicture(userId, "1", TlgMediaType.PHOTO);
+        final String tag1 = "tag1";
+        final Tags tags1 = new Tags(tag1 + " tag2 tag3");
+        final MediaTags pht1 = new MediaTags(saved1, tags1);
+        new RepTags(DsHikari.ds()).save(pht1);
+        final Collection<String> testTags =
+            new RepTags(DsHikari.ds()).findTagsByFileId(saved1);
+        tags1.getTags().forEach(existedTag -> {
+            if (!testTags.contains(existedTag)) {
+                fail(
+                    String.format(
+                        "Tag [%s] is not exist in saved", existedTag
+                        )
+                    );
+            }
+        });
+    }
+    
+    @Test
+    public void findTagsForUnsavedPhoto() throws SQLException {
+
+        final Integer userId = 1;
+        final Picture saved1 = new BasePicture(userId, "1", TlgMediaType.PHOTO);
+        final Picture unsaved = new BasePicture(2, "2", TlgMediaType.PHOTO);
+        final String tag1 = "tag1";
+        final Tags tags1 = new Tags(tag1 + " tag2 tag3");
+        final MediaTags pht1 = new MediaTags(saved1, tags1);
+        new RepTags(DsHikari.ds()).save(pht1);
+        final Collection<String> testTags =
+            new RepTags(DsHikari.ds()).findTagsByFileId(unsaved);
+        MatcherAssert.assertThat(
+            "Tags don't have to exist",
+            testTags,
+            Matchers.emptyCollectionOf(String.class)
+            );
+    }
+    
+    
     @Test
     public void savePhotosFindByIncompleteTag() throws SQLException {
         // pictures both users

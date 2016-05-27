@@ -16,14 +16,10 @@ public class HelpCommand extends ExecuteCommand {
         .getLogger(HelpCommand.class.getName());
     
    
-    private final String chatId;
-    
-    public HelpCommand(final String chatId) {
-        this.chatId = chatId;
-    }
+    private final Long chatId;
 
     public HelpCommand(final Long chatId) {
-        this(String.valueOf(chatId));
+        this.chatId = chatId;
     }
 
     @Override
