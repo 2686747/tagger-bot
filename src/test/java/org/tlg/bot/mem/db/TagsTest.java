@@ -70,7 +70,6 @@ public class TagsTest {
         final Picture saved2 = new BasePicture(userId, "2", TlgMediaType.PHOTO);
         final String tag1 = "tag1";
         final Tags tags1 = new Tags(tag1 + " tag2 tag3");
-        final Tags tags2 = new Tags("tag2 tag3");
         final MediaTags pht1 = new MediaTags(saved1, tags1);
         new RepTags(DsHikari.ds()).save(pht1);
         assertFalse(

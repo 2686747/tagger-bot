@@ -94,7 +94,7 @@ public class UploadCommand implements Command {
             
             final Optional<Tags> tags =
                 new RepTags(DsHikari.ds()).findTagsByFileId(media);
-            if (!tags.isPresent()) {
+            if (tags.isPresent()) {
 
                 final StringBuilder resp = new StringBuilder("This ")
                     .append(mediaName).append(" is already stored with tags:\n")

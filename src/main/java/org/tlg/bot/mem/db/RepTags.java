@@ -74,10 +74,6 @@ public class RepTags {
      * @throws SQLException
      */
     private void delete(final Connection conn, final Picture media) throws SQLException {
-//        try (final Connection conn = ds.dataSource().getConnection()) {
-            // delete current picture
-
-            // save with new tags
             final StringBuilder sql = new StringBuilder("DELETE FROM ");
             sql.append(MediaTags.TABLE)
                 .append(" WHERE photo_id = ? and user_id = ?");
@@ -85,7 +81,6 @@ public class RepTags {
             ps.setString(1, media.getFileId());
             ps.setInt(2, media.getUserId());
             ps.execute();
-//        }
     }
 
     public Optional<Tags> findTagsByFileId(final Picture media)
