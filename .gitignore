@@ -6,3 +6,4 @@ target
 *.log
 *.mv.db
 *.trace.db
+src/main/java/tools/**

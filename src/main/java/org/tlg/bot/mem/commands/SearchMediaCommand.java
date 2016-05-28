@@ -54,6 +54,7 @@ public class SearchMediaCommand extends  ExecuteCommand {
             }
             final AnswerInlineQuery answer = new AnswerInlineQuery();
             answer.setInlineQueryId(query.getId());
+//            answer.setCacheTime(cacheTime)
             final List<InlineQueryResult> results = new ArrayList<>();
             photos.forEach(picture -> {
                results.add(

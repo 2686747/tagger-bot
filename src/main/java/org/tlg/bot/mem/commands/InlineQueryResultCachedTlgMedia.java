@@ -29,6 +29,7 @@ public class InlineQueryResultCachedTlgMedia {
           return new InlineQueryResultCachedPhoto()
           .setPhotoFileId(picture.getFileId())
           .setId(String.valueOf(System.nanoTime()));
+          
         case STICKER:
             return new InlineQueryResultCachedSticker()
             .setStickerFileId(picture.getFileId())

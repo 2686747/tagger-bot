@@ -39,21 +39,27 @@ public class RepTags {
 
     public void save(final MediaTags tags) throws SQLException {
         try (final Connection conn = ds.dataSource().getConnection()) {
-            final StringBuilder sql = new StringBuilder("INSERT INTO ");
-            sql.append(MediaTags.TABLE)
-                .append(" (tag_id, user_id, photo_id, media_type)")
-                .append(" VALUES (?, ?, ?, ?)");
-            final PreparedStatement ps = conn.prepareStatement(sql.toString());
-            for (final String tag : tags.getTags().getTags()) {
-                ps.setString(1, tag);
-                ps.setInt(2, tags.getPicture().getUserId());
-                ps.setString(3, tags.getPicture().getFileId());
-                ps.setByte(4, tags.getPicture().getType().asByte());
-                ps.addBatch();
-            }
-            ps.executeBatch();
+            conn.setAutoCommit(false);
+            save(conn, tags);
             conn.commit();
         }
+    }
+
+    public void save(final Connection conn, final MediaTags tags)
+        throws SQLException {
+        final StringBuilder sql = new StringBuilder("INSERT INTO ");
+        sql.append(MediaTags.TABLE)
+            .append(" (tag_id, user_id, photo_id, media_type)")
+            .append(" VALUES (?, ?, ?, ?)");
+        final PreparedStatement ps = conn.prepareStatement(sql.toString());
+        for (final String tag : tags.getTags().getTags()) {
+            ps.setString(1, tag);
+            ps.setInt(2, tags.getPicture().getUserId());
+            ps.setString(3, tags.getPicture().getFileId());
+            ps.setByte(4, tags.getPicture().getType().asByte());
+            ps.addBatch();
+        }
+        ps.executeBatch();
     }
 
     public void update(final MediaTags tags) throws SQLException {
@@ -62,7 +68,7 @@ public class RepTags {
             // delete current picture
             delete(conn, tags.getPicture());
             // save with new tags
-            save(tags);
+            save(conn, tags);
             conn.commit();
         }
     }
@@ -73,14 +79,15 @@ public class RepTags {
      * @param media
      * @throws SQLException
      */
-    private void delete(final Connection conn, final Picture media) throws SQLException {
-            final StringBuilder sql = new StringBuilder("DELETE FROM ");
-            sql.append(MediaTags.TABLE)
-                .append(" WHERE photo_id = ? and user_id = ?");
-            final PreparedStatement ps = conn.prepareStatement(sql.toString());
-            ps.setString(1, media.getFileId());
-            ps.setInt(2, media.getUserId());
-            ps.execute();
+    private void delete(final Connection conn, final Picture media)
+        throws SQLException {
+        final StringBuilder sql = new StringBuilder("DELETE FROM ");
+        sql.append(MediaTags.TABLE)
+            .append(" WHERE photo_id = ? and user_id = ?");
+        final PreparedStatement ps = conn.prepareStatement(sql.toString());
+        ps.setString(1, media.getFileId());
+        ps.setInt(2, media.getUserId());
+        ps.execute();
     }
 
     public Optional<Tags> findTagsByFileId(final Picture media)
@@ -98,11 +105,10 @@ public class RepTags {
             while (rs.next()) {
                 result.add(rs.getString("tag_id"));
             }
-            
+
         }
-        return !result.isEmpty() ?
-            Optional.of(new Tags(result)) :
-            Optional.empty();
+        return !result.isEmpty() ? Optional.of(new Tags(result))
+            : Optional.empty();
     }
 
     public Collection<Picture> findByTags(final Tags tags, final Integer userId)
@@ -139,8 +145,8 @@ public class RepTags {
 
     public boolean isSaved(final Picture media) throws SQLException {
         try (final Connection conn = ds.dataSource().getConnection()) {
-            final StringBuilder sql = new StringBuilder(
-                "SELECT 1 FROM ").append(MediaTags.TABLE)
+            final StringBuilder sql = new StringBuilder("SELECT 1 FROM ")
+                .append(MediaTags.TABLE)
                 .append(" WHERE user_id = ? AND photo_id = ?");
             final PreparedStatement ps = conn.prepareStatement(sql.toString());
             ps.setInt(1, media.getUserId());
@@ -149,7 +155,7 @@ public class RepTags {
             return rs.next();
         }
     }
-    
+
     private static Collection<Picture> rsTags(final ResultSet rs)
         throws SQLException {
         final Collection<Picture> result = new ArrayList<>();

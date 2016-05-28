@@ -6,6 +6,7 @@ package org.tlg.bot.mem.tools;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.util.Optional;
+import java.util.Properties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.jcabi.manifests.Manifests;
@@ -39,5 +40,21 @@ private static final Logger log = LoggerFactory
         } catch (final Exception e) {
             return Optional.empty();
         }
+    }
+    
+    public static Optional<String> property(final String resource, final String property) {
+        final Properties properties = new Properties();
+        try {
+            properties.load(ResourceReader.class.getResourceAsStream(resource));
+            return Optional.ofNullable(properties.getProperty(property));
+        } catch (final Exception e) {
+            log.error(
+                "Can't read property [{}] from resource [{}]",
+                property,
+                resource
+            );
+        }
+        return Optional.empty();
+        
     }
 }
