@@ -210,6 +210,9 @@ public class UploadCommand extends MemBotCommand {
                 executeCommand(cmd);
             }
 
+        } else {
+            cancelCurrent();
+            new HelpCommand(getBot(), this.message.getChatId()).execute();
         }
     }
 

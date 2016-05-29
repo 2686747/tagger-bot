@@ -33,7 +33,6 @@ public class MemBot extends TelegramLongPollingBot {
         log.debug("update:{}", update);
         // process if this somebody answer
         if (update.hasMessage()) {
-            hideKeyboard(update.getMessage());
             processAsMessage(update);
         }
         if (update.hasInlineQuery()) {
@@ -90,19 +89,6 @@ public class MemBot extends TelegramLongPollingBot {
             }
         });
 
-    }
-
-    
-    public void hideKeyboard(final Message message) {
-//        try {
-//            final SendMessage msg = new SendMessage();
-//            msg.setChatId(String.valueOf(message.getChatId()));
-//            final ReplyKeyboard hideKeyboard = new ReplyKeyboardHide();
-//            msg.setReplayMarkup(hideKeyboard );
-//            sendMessage(msg);
-//        } catch (final TelegramApiException e) {
-//            e.printStackTrace();
-//        }
     }
     
     public void answerAwait(final Long chatId, final Command waitor) {
