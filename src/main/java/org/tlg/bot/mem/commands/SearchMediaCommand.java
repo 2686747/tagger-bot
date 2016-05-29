@@ -30,9 +30,8 @@ public class SearchMediaCommand extends  ExecuteCommand {
     
     private final InlineQuery query;
     
-    
-    public SearchMediaCommand(final InlineQuery query) {
-        super();
+    public SearchMediaCommand(final MemBot bot, final InlineQuery query) {
+        super(bot);
         this.query = query;
     }
 
@@ -41,7 +40,7 @@ public class SearchMediaCommand extends  ExecuteCommand {
      * @see org.tlg.bot.mem.commands.Command#execute(org.tlg.bot.mem.MemBot)
      */
     @Override
-    public void execute(final MemBot sender) {
+    public void execute() {
         final Integer userId = query.getFrom().getId();
         try {
             final Collection<Picture> photos = new RepTags(DsHikari.ds())
@@ -64,7 +63,7 @@ public class SearchMediaCommand extends  ExecuteCommand {
             answer.setResults(results );
             
             log.debug("answer:{}", answer.toJson());
-            sender.answerInlineQuery(answer);
+            getBot().answerInlineQuery(answer);
         } catch (final SQLException e) {
             log.debug("Can't found photos", e);
         } catch (final TelegramApiException e) {

@@ -5,7 +5,7 @@ package org.tlg.bot.mem.msg;
  * @author "Maksim Vakhnik"
  *
  */
-public class HtmlMessage extends TextMessage {
+public class HtmlMessage extends TextMessageHideKeyboard {
     
     public HtmlMessage(final Long chatId, final String text) {
         super(chatId, text);

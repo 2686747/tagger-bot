@@ -14,18 +14,18 @@ import org.tlg.bot.mem.msg.HelpMessage;
 public class HelpCommand extends ExecuteCommand {
     private static final Logger log = LoggerFactory
         .getLogger(HelpCommand.class.getName());
-    
    
     private final Long chatId;
 
-    public HelpCommand(final Long chatId) {
+    public HelpCommand(final MemBot bot, final Long chatId) {
+        super(bot);
         this.chatId = chatId;
     }
 
     @Override
-    public void execute(final MemBot sender) {
+    public void execute() {
         try {
-            sender.sendMessage(new HelpMessage(this.chatId));
+            getBot().sendMessage(new HelpMessage(this.chatId));
         } catch (final TelegramApiException e) {
             log.error("Can't send help messagemessage", e);
         }

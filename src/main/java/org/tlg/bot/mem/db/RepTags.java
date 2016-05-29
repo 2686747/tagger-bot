@@ -61,7 +61,13 @@ public class RepTags {
         }
         ps.executeBatch();
     }
-
+    
+    public void delete(final Picture picture) throws SQLException {
+        try (final Connection conn = ds.dataSource().getConnection()) {
+            delete(conn, picture);
+        }
+    }
+    
     public void update(final MediaTags tags) throws SQLException {
         try (final Connection conn = ds.dataSource().getConnection()) {
             conn.setAutoCommit(false);
@@ -87,6 +93,7 @@ public class RepTags {
         final PreparedStatement ps = conn.prepareStatement(sql.toString());
         ps.setString(1, media.getFileId());
         ps.setInt(2, media.getUserId());
+        log.debug("DELETE:{}", ps);
         ps.execute();
     }
 

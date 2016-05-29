@@ -60,9 +60,8 @@ private static final Logger log = LoggerFactory
             
         }
         return Optional.empty();
-
     }
-
+    
     private static class DbPhoto extends  BasePicture {
         
         private DbPhoto(final ResultSet rs) throws SQLException {

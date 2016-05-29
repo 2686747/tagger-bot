@@ -3,8 +3,6 @@
  */
 package org.tlg.bot.mem.commands;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.telegram.telegrambots.api.objects.inlinequery.result.InlineQueryResult;
 import org.telegram.telegrambots.api.objects.inlinequery.result.chached.InlineQueryResultCachedGif;
 import org.telegram.telegrambots.api.objects.inlinequery.result.chached.InlineQueryResultCachedPhoto;
@@ -18,8 +16,6 @@ import org.tlg.bot.mem.db.domain.Picture;
  *
  */
 public class InlineQueryResultCachedTlgMedia {
-    private static final Logger log = LoggerFactory
-        .getLogger(InlineQueryResultCachedTlgMedia.class.getName());
 
     private final Picture picture;
 

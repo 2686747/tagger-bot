@@ -15,17 +15,17 @@ public class VersionCommand extends ExecuteCommand {
     private static final Logger log = LoggerFactory
         .getLogger(VersionCommand.class.getName());
     
-   
     private final Long chatId;
 
-    public VersionCommand(final Long chatId) {
+    public VersionCommand(final MemBot bot, final Long chatId) {
+        super(bot);
         this.chatId = chatId;
     }
 
     @Override
-    public void execute(final MemBot sender) {
+    public void execute() {
         try {
-            sender.sendMessage(new VersionMessage(this.chatId));
+            getBot().sendMessage(new VersionMessage(this.chatId));
         } catch (final TelegramApiException e) {
             log.error("Can't send help messagemessage", e);
         }

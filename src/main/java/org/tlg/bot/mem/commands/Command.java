@@ -4,7 +4,6 @@
 package org.tlg.bot.mem.commands;
 
 import org.telegram.telegrambots.api.objects.Update;
-import org.tlg.bot.mem.MemBot;
 
 /**
  * Received command.
@@ -13,8 +12,8 @@ import org.tlg.bot.mem.MemBot;
  */
 public interface Command {
 
-    void execute(MemBot sender);
+    void execute();
 
-    void resume(MemBot sender, Update update);
+    void resume(Update update);
 
 }

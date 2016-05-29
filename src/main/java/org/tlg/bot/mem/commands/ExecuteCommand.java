@@ -11,13 +11,14 @@ import org.tlg.bot.mem.MemBot;
  * @author "Maksim Vakhnik"
  *
  */
-public abstract class ExecuteCommand implements Command {
+public abstract class ExecuteCommand extends MemBotCommand {
+
+    protected ExecuteCommand(final MemBot bot) {
+        super(bot);
+    }
 
     @Override
-    public abstract void execute(MemBot sender);
-
-    @Override
-    public final void resume(final MemBot sender, final Update update) {
+    public final void resume(final Update update) {
         throw new UnsupportedOperationException(
             "Resume operation is not supported"
             );

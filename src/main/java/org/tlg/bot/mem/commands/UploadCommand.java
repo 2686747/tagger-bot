@@ -23,13 +23,13 @@ import org.tlg.bot.mem.db.domain.TlgSticker;
 import org.tlg.bot.mem.db.ds.DsHikari;
 import org.tlg.bot.mem.exceptions.MediaTypeException;
 import org.tlg.bot.mem.msg.HtmlMessage;
-import org.tlg.bot.mem.msg.TextMessage;
+import org.tlg.bot.mem.msg.TextMessageHideKeyboard;
 
 /**
  * @author "Maksim Vakhnik"
  *
  */
-public class UploadCommand implements Command {
+public class UploadCommand extends MemBotCommand {
 
     public enum Commands {
         DELETE("/delete"), CANCEL("/cancel");
@@ -58,7 +58,8 @@ public class UploadCommand implements Command {
 
     private final Message message;
 
-    public UploadCommand(final Message message) {
+    public UploadCommand(final MemBot sender, final Message message) {
+        super(sender);
         this.message = message;
     }
 
@@ -68,52 +69,65 @@ public class UploadCommand implements Command {
      * @see org.tlg.bot.mem.commands.Command#execute()
      */
     @Override
-    public void execute(final MemBot sender) {
-        sender.answerAwait(message.getChatId(), this);
+    public void execute() {
+
+        startConversation();
+
         try {
-            sender.sendMessage(uploadResponse());
+            getBot().sendMessage(uploadResponse());
         } catch (final TelegramApiException e) {
             log.error(e.getApiResponse(), e);
 
-            internalError(sender);
+            internalError();
         } catch (final Exception e) {
             log.error(e.getMessage(), e);
-            internalError(sender);
+            internalError();
         }
     }
 
-    private void internalError(final MemBot sender) {
-        sender.leaveAwaitQueue(this);
+    private void startConversation() {
+        getBot().answerAwait(this.message.getChatId(), this);
+
+    }
+
+    private void endConversation() {
+        getBot().leaveAwaitQueue(this);
+    }
+
+    private void internalError(final Exception e) {
+        log.error(e.getMessage(), e);
+        internalError();
+    }
+
+    private void internalError() {
+        endConversation();
+        sendMessageHideKeyboard("Sorry, i can't process your media");
+    }
+
+    private void mediaTypeError(final MediaTypeException exception) {
+
+        log.warn("Wrong media type:{}", exception.causeTelegramMessage());
+        log.debug("Wrong media type", exception);
+        endConversation();
+        sendMessageHideKeyboard("Sorry, this type of media is not supported yet");
+    }
+
+    private void cancelCurrent() {
+        endConversation();
+        sendMessageHideKeyboard("Canceled");
+
+    }
+
+    private void sendMessageHideKeyboard(final String text) {
         try {
-            sender.sendMessage(new TextMessage(this.message.getChatId(),
-                "Sorry, i can't process your media"));
+            getBot().sendMessage(
+                new TextMessageHideKeyboard(this.message.getChatId(), text));
         } catch (final TelegramApiException e) {
             log.error(e.getApiResponse(), e);
         }
 
     }
 
-    private void mediaTypeError(final MemBot sender) {
-        sender.leaveAwaitQueue(this);
-        try {
-            sender.sendMessage(new TextMessage(this.message.getChatId(),
-                "Sorry, this type of media is not supported yet"));
-        } catch (final TelegramApiException e) {
-            log.error(e.getApiResponse(), e);
-        }
-    }
-
-    private void cancelCurrent(final MemBot sender) {
-        sender.leaveAwaitQueue(this);
-        try {
-            sender.sendMessage(new TextMessage(this.message.getChatId(),
-                "Canceled"));
-        } catch (final TelegramApiException e) {
-            log.error(e.getApiResponse(), e);
-        }
-        
-    }
-    
     private HtmlMessage uploadResponse() throws Exception {
         String mediaName = "media";
         Picture media = null;
@@ -163,25 +177,20 @@ public class UploadCommand implements Command {
     }
 
     @Override
-    public void resume(final MemBot sender, final Update update) {
+    public void resume(final Update update) {
         try {
-            processAnswer(sender, update);
+            processAnswer(update);
         } catch (final MediaTypeException e) {
-            log.debug("Wrong type of media", e);
-            mediaTypeError(sender);
-        } catch (final TelegramApiException e) {
-            log.error(e.getApiResponse(), e);
-            internalError(sender);
+            mediaTypeError(e);
         } catch (final SQLException e) {
             log.error(e.getMessage(), e);
-            internalError(sender);
-            e.printStackTrace();
+            internalError();
         }
 
     }
 
-    private void processAnswer(final MemBot sender, final Update update)
-        throws TelegramApiException, SQLException, MediaTypeException {
+    private void processAnswer(final Update update)
+        throws  SQLException, MediaTypeException {
         // if tags are correct - save picture
         if (update.getMessage().hasText()) {
             final Optional<Commands> cmd = Commands
@@ -192,43 +201,50 @@ public class UploadCommand implements Command {
                 if (!tags.isEmpty()) {
 
                     saveOrUpdatePicture(this.message, tags);
-                    sender.sendMessage(
-                        new TextMessage(update.getMessage().getChatId(),
-                            "Picture is saved successfully"));
+                    sendMessageHideKeyboard("Picture is saved successfully");
                 } else {
                     // else add itself to queue and wait for correct tags
-                    sender.answerAwait(message.getChatId(), this);
+                    startConversation();
                 }
             } else {
-                executeCommand(sender, cmd);
+                executeCommand(cmd);
             }
 
         }
     }
 
-    private void executeCommand(
-        final MemBot sender, final Optional<Commands> cmd
-        ) {
+    private void executeCommand(final Optional<Commands> cmd) {
         switch (cmd.get()) {
         case DELETE:
             deleteMedia();
             return;
         case CANCEL:
-            cancelCurrent(sender);
+            cancelCurrent();
             return;
         }
     }
 
-   
-
     private void deleteMedia() {
-//        try {
-//            final Picture media = getMedia(this.message);
-//        } catch (MediaTypeException e) {
-//            e.printStackTrace();
-//        }
-        
+        try {
+            final Picture media = getMedia(this.message);
+            final RepTags repTags = new RepTags(DsHikari.ds());
+            if (repTags.isSaved(media)) {
+                repTags.delete(media);
+                sendMessageHideKeyboard("Picture was deleted");
+                endConversation();
+            } else {
+                // wrong command, media was not saved
+                sendMessageHideKeyboard("Picture is not saved yet");
+                cancelCurrent();
+            }
+        } catch (final MediaTypeException e) {
+            mediaTypeError(e);
+        } catch (final SQLException e) {
+            internalError(e);
+        }
+
     }
+
 
     private void saveOrUpdatePicture(final Message message, final Tags tags)
         throws SQLException, MediaTypeException {

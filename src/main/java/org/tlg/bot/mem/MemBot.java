@@ -4,6 +4,9 @@ import java.util.HashMap;
 import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.telegram.telegrambots.TelegramApiException;
+import org.telegram.telegrambots.api.methods.send.SendMessage;
+import org.telegram.telegrambots.api.objects.Message;
 import org.telegram.telegrambots.api.objects.Update;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.tlg.bot.mem.commands.Command;
@@ -30,8 +33,8 @@ public class MemBot extends TelegramLongPollingBot {
         log.debug("update:{}", update);
         // process if this somebody answer
         if (update.hasMessage()) {
+            hideKeyboard(update.getMessage());
             processAsMessage(update);
-
         }
         if (update.hasInlineQuery()) {
             processAsInlineQuery(update);
@@ -42,7 +45,7 @@ public class MemBot extends TelegramLongPollingBot {
     private void processAsInlineQuery(final Update update) {
         if (update.getInlineQuery().getQuery() != null
             && !update.getInlineQuery().getQuery().isEmpty()) {
-            execute(new SearchMediaCommand(update.getInlineQuery()));
+            execute(new SearchMediaCommand(this, update.getInlineQuery()));
         }
 
     }
@@ -53,7 +56,8 @@ public class MemBot extends TelegramLongPollingBot {
                 .get(update.getMessage().getChatId());
             resume(command, update);
         } else {
-            final Command command = new CommandProcessor(update).command();
+            final Command command =
+                new CommandProcessor(this, update).command();
             this.execute(command);
         }
 
@@ -67,7 +71,7 @@ public class MemBot extends TelegramLongPollingBot {
      */
     void resume(final Command command, final Update update) {
         this.commands.remove(update.getMessage().getChatId());
-        command.resume(this, update);
+        command.resume(update);
     }
 
     /**
@@ -76,7 +80,7 @@ public class MemBot extends TelegramLongPollingBot {
      * @param command
      */
     void execute(final Command command) {
-        command.execute(this);
+        command.execute();
     }
 
     public void leaveAwaitQueue(final Command command) {
@@ -88,6 +92,19 @@ public class MemBot extends TelegramLongPollingBot {
 
     }
 
+    
+    public void hideKeyboard(final Message message) {
+//        try {
+//            final SendMessage msg = new SendMessage();
+//            msg.setChatId(String.valueOf(message.getChatId()));
+//            final ReplyKeyboard hideKeyboard = new ReplyKeyboardHide();
+//            msg.setReplayMarkup(hideKeyboard );
+//            sendMessage(msg);
+//        } catch (final TelegramApiException e) {
+//            e.printStackTrace();
+//        }
+    }
+    
     public void answerAwait(final Long chatId, final Command waitor) {
         this.commands.put(chatId, waitor);
     }
@@ -100,6 +117,13 @@ public class MemBot extends TelegramLongPollingBot {
     @Override
     public String getBotToken() {
         return this.token;
+    }
+
+    @Override
+    public Message sendMessage(final SendMessage sendMessage)
+        throws TelegramApiException {
+        log.debug("sendMessage:{}", sendMessage.toJson());
+        return super.sendMessage(sendMessage);
     }
 
 }
