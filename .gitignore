@@ -7,3 +7,5 @@ target
 *.mv.db
 *.trace.db
 src/main/java/tools/**
+.lib
+

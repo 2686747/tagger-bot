@@ -4,15 +4,15 @@
 package org.tlg.bot.mem.commands;
 
 import java.sql.SQLException;
-import java.util.List;
+import java.util.Arrays;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.telegram.telegrambots.TelegramApiException;
 import org.telegram.telegrambots.api.objects.Message;
-import org.telegram.telegrambots.api.objects.PhotoSize;
-import org.telegram.telegrambots.api.objects.Sticker;
 import org.telegram.telegrambots.api.objects.Update;
+import org.telegram.telegrambots.api.objects.replykeyboard.ReplyKeyboardMarkup;
+import org.telegram.telegrambots.api.objects.replykeyboard.buttons.KeyboardRow;
 import org.tlg.bot.mem.MemBot;
 import org.tlg.bot.mem.db.RepTags;
 import org.tlg.bot.mem.db.domain.MediaTags;
@@ -21,6 +21,7 @@ import org.tlg.bot.mem.db.domain.Tags;
 import org.tlg.bot.mem.db.domain.TlgPhoto;
 import org.tlg.bot.mem.db.domain.TlgSticker;
 import org.tlg.bot.mem.db.ds.DsHikari;
+import org.tlg.bot.mem.exceptions.MediaTypeException;
 import org.tlg.bot.mem.msg.HtmlMessage;
 import org.tlg.bot.mem.msg.TextMessage;
 
@@ -29,6 +30,28 @@ import org.tlg.bot.mem.msg.TextMessage;
  *
  */
 public class UploadCommand implements Command {
+
+    public enum Commands {
+        DELETE("/delete"), CANCEL("/cancel");
+        private final String value;
+
+        private Commands(final String value) {
+            this.value = value;
+        }
+
+        public static final Optional<Commands> commandOf(final String command) {
+            for (final Commands cmd : Commands.values()) {
+                if (cmd.value.equals(command)) {
+                    return Optional.of(cmd);
+                }
+            }
+            return Optional.empty();
+        }
+
+        public final String value() {
+            return value;
+        }
+    }
 
     private static final Logger log = LoggerFactory
         .getLogger(UploadCommand.class.getName());
@@ -48,35 +71,50 @@ public class UploadCommand implements Command {
     public void execute(final MemBot sender) {
         sender.answerAwait(message.getChatId(), this);
         try {
-            sender.sendMessage(
-                new HtmlMessage(message.getChatId(), uploadResponse())
-            );
+            sender.sendMessage(uploadResponse());
         } catch (final TelegramApiException e) {
             log.error(e.getApiResponse(), e);
-            
+
             internalError(sender);
-         } catch (final Exception e) {
-           log.error(e.getMessage(), e);
-           internalError(sender);
+        } catch (final Exception e) {
+            log.error(e.getMessage(), e);
+            internalError(sender);
         }
     }
 
     private void internalError(final MemBot sender) {
         sender.leaveAwaitQueue(this);
-       try {
-        sender.sendMessage(
-               new TextMessage(
-                   this.message.getChatId(),
-                   "Sorry, i can't process your media"
-                   )
-               );
-    } catch (final TelegramApiException e) {
-        log.error(e.getApiResponse(), e);
-    }
-        
+        try {
+            sender.sendMessage(new TextMessage(this.message.getChatId(),
+                "Sorry, i can't process your media"));
+        } catch (final TelegramApiException e) {
+            log.error(e.getApiResponse(), e);
+        }
+
     }
 
-    private String uploadResponse() throws Exception {
+    private void mediaTypeError(final MemBot sender) {
+        sender.leaveAwaitQueue(this);
+        try {
+            sender.sendMessage(new TextMessage(this.message.getChatId(),
+                "Sorry, this type of media is not supported yet"));
+        } catch (final TelegramApiException e) {
+            log.error(e.getApiResponse(), e);
+        }
+    }
+
+    private void cancelCurrent(final MemBot sender) {
+        sender.leaveAwaitQueue(this);
+        try {
+            sender.sendMessage(new TextMessage(this.message.getChatId(),
+                "Canceled"));
+        } catch (final TelegramApiException e) {
+            log.error(e.getApiResponse(), e);
+        }
+        
+    }
+    
+    private HtmlMessage uploadResponse() throws Exception {
         String mediaName = "media";
         Picture media = null;
 
@@ -88,12 +126,16 @@ public class UploadCommand implements Command {
             mediaName = "photo";
             media = new TlgPhoto(this.message);
         }
-
+        HtmlMessage response;
+        final ReplyKeyboardMarkup kbd = new ReplyKeyboardMarkup();
+        kbd.setResizeKeyboard(true);
+        kbd.setOneTimeKeyboad(true);
+        final KeyboardRow kRow = new KeyboardRow();
         if (media != null) {
             // if is stored already
-            
-            final Optional<Tags> tags =
-                new RepTags(DsHikari.ds()).findTagsByFileId(media);
+
+            final Optional<Tags> tags = new RepTags(DsHikari.ds())
+                .findTagsByFileId(media);
             if (tags.isPresent()) {
 
                 final StringBuilder resp = new StringBuilder("This ")
@@ -101,73 +143,108 @@ public class UploadCommand implements Command {
                     .append("<b>");
                 resp.append(tags.get().asStringRow());
                 resp.append("</b>\n").append("Please input new tags.");
-                return resp.toString();
+                response = new HtmlMessage(message.getChatId(),
+                    resp.toString());
+                kRow.add(Commands.DELETE.value());
+                kRow.add(Commands.CANCEL.value());
             } else {
-                return "Please, input tags for this " + mediaName;
+                response = new HtmlMessage(message.getChatId(),
+                    "Please, input tags for this " + mediaName);
+                kRow.add(Commands.CANCEL.value());
+
             }
+            kbd.setKeyboard(Arrays.asList(kRow));
+            response.setReplayMarkup(kbd);
+            return response;
         }
-        return "Sorry. Such media is not supported yet.";
+        // just simple message
+        return new HtmlMessage(message.getChatId(),
+            "Sorry. Such media is not supported yet.");
     }
 
     @Override
     public void resume(final MemBot sender, final Update update) {
+        try {
+            processAnswer(sender, update);
+        } catch (final MediaTypeException e) {
+            log.debug("Wrong type of media", e);
+            mediaTypeError(sender);
+        } catch (final TelegramApiException e) {
+            log.error(e.getApiResponse(), e);
+            internalError(sender);
+        } catch (final SQLException e) {
+            log.error(e.getMessage(), e);
+            internalError(sender);
+            e.printStackTrace();
+        }
 
+    }
+
+    private void processAnswer(final MemBot sender, final Update update)
+        throws TelegramApiException, SQLException, MediaTypeException {
         // if tags are correct - save picture
         if (update.getMessage().hasText()) {
-            final Tags tags = new Tags(update.getMessage().getText());
-            if (!tags.isEmpty()) {
-               
-                saveOrUpdatePicture(this.message, tags);
-                try {
+            final Optional<Commands> cmd = Commands
+                .commandOf(update.getMessage().getText());
+
+            if (!cmd.isPresent()) {
+                final Tags tags = new Tags(update.getMessage().getText());
+                if (!tags.isEmpty()) {
+
+                    saveOrUpdatePicture(this.message, tags);
                     sender.sendMessage(
                         new TextMessage(update.getMessage().getChatId(),
                             "Picture is saved successfully"));
-                } catch (final TelegramApiException e) {
-                    log.error("Can't send message", e);
+                } else {
+                    // else add itself to queue and wait for correct tags
+                    sender.answerAwait(message.getChatId(), this);
                 }
             } else {
-                // else add itself to queue and wait for correct tags
-                sender.answerAwait(message.getChatId(), this);
+                executeCommand(sender, cmd);
             }
+
         }
+    }
+
+    private void executeCommand(
+        final MemBot sender, final Optional<Commands> cmd
+        ) {
+        switch (cmd.get()) {
+        case DELETE:
+            deleteMedia();
+            return;
+        case CANCEL:
+            cancelCurrent(sender);
+            return;
+        }
+    }
+
+   
+
+    private void deleteMedia() {
+//        try {
+//            final Picture media = getMedia(this.message);
+//        } catch (MediaTypeException e) {
+//            e.printStackTrace();
+//        }
+        
+    }
+
+    private void saveOrUpdatePicture(final Message message, final Tags tags)
+        throws SQLException, MediaTypeException {
+        saveUpdate(new MediaTags(getMedia(message), tags));
 
     }
 
-    private void saveOrUpdatePicture(final Message message, final Tags tags) {
-
+    private static Picture getMedia(final Message message)
+        throws MediaTypeException {
         if (message.getPhoto() != null) {
-            savePhoto(message.getPhoto(), tags);
-            return;
+            return new TlgPhoto(message);
         }
         if (message.getSticker() != null) {
-            saveSticker(message.getSticker(), tags);
-            return;
+            return new TlgSticker(message);
         }
-
-    }
-
-    private void saveSticker(final Sticker sticker, final Tags tags) {
-        try {
-
-            final TlgSticker photo = new TlgSticker(message.getFrom().getId(),
-                sticker.getFileId());
-            log.debug("Try save tags:{}", tags);
-            saveUpdate(new MediaTags(photo, tags));
-        } catch (final Exception e) {
-            log.error("Can't save sticker", e);
-        }
-
-    }
-
-    private void savePhoto(final List<PhotoSize> photos, final Tags tags) {
-        try {
-            final TlgPhoto photo = new TlgPhoto(this.message);
-            log.debug("Try save tags:{}", tags);
-            saveUpdate(new MediaTags(photo, tags));
-        } catch (final Exception e) {
-            log.error("Can't save photo", e);
-        }
-
+        throw new MediaTypeException(message);
     }
 
     private void saveUpdate(final MediaTags tags) throws SQLException {
@@ -177,8 +254,7 @@ public class UploadCommand implements Command {
         } else {
             repTags.save(tags);
         }
-       
-        
+
     }
 
     @Override
