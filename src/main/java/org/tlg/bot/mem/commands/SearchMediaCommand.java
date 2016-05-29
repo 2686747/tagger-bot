@@ -52,7 +52,7 @@ public class SearchMediaCommand extends  ExecuteCommand {
                 return;
             }
             final AnswerInlineQuery answer = new AnswerInlineQuery();
-            
+            answer.setCacheTime(1);
             answer.setInlineQueryId(query.getId());
             final List<InlineQueryResult> results = new ArrayList<>();
             photos.forEach(picture -> {
