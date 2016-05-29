@@ -54,7 +54,6 @@ public class SearchMediaCommand extends  ExecuteCommand {
             }
             final AnswerInlineQuery answer = new AnswerInlineQuery();
             answer.setInlineQueryId(query.getId());
-//            answer.setCacheTime(cacheTime)
             final List<InlineQueryResult> results = new ArrayList<>();
             photos.forEach(picture -> {
                results.add(
@@ -62,12 +61,13 @@ public class SearchMediaCommand extends  ExecuteCommand {
                    );
             });
             answer.setResults(results );
-            log.debug("answer:{}", answer);
+            
+            log.debug("answer:{}", answer.toJson());
             sender.answerInlineQuery(answer);
         } catch (final SQLException e) {
             log.debug("Can't found photos", e);
         } catch (final TelegramApiException e) {
-            log.debug("Can't send answer", e);
+            log.debug(e.getApiResponse(), e);
         }
     }
 
