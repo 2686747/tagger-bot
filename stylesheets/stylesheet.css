@@ -255,6 +255,20 @@ a.button span {
 #view-on-github {
     margin-right: 0;
 }
+#view-on-tlg span {
+    background: transparent url(../images/t_logo_23.png) 12px 50% no-repeat;
+}
+#view-on-tlg {
+    margin-right: 0;
+}
+#tlgChannel span {
+    background: transparent url(../images/t_logo_23.png) 12px 50% no-repeat;
+}
+#tlgChannel {
+    float: none;
+    margin-left: auto;
+    margin-right: auto
+}
 code,
 pre {
     margin-bottom: 30px;
@@ -415,18 +429,24 @@ footer a:hover {
 /*Input messages as typewriter*/
 
 @-webkit-keyframes typing {
-    from {
+    0% {
         width: 0
     }
-    to {
+    10% {
+        width: 16.3em
+    }
+    100% {
         width: 16.3em
     }
 }
 @-moz-keyframes typing {
-    from {
+    0% {
         width: 0
     }
-    to {
+    10% {
+        width: 16.3em
+    }
+    100% {
         width: 16.3em
     }
 }
@@ -436,16 +456,16 @@ footer a:hover {
         border-color: transparent
     }
     50% {
-        border-color: black
+        border-color: gray
     }
 }
 @-moz-keyframes blink-caret {
     from,
     to {
-        border-color: transparent
+        border-color: gray
     }
     50% {
-        border-color: black
+        border-color: transparent
     }
 }
 .typewriter {
@@ -454,29 +474,35 @@ footer a:hover {
     width: 16.3em;
     white-space: nowrap;
     overflow: hidden;
-    border-right: .1em solid black;
-    -webkit-animation: typing 4s steps(30, end), /* # of steps = # of characters */
-    blink-caret 1s step-end infinite;
-    -moz-animation: typing 4s steps(30, end), /* # of steps = # of characters */
-    blink-caret 1s step-end infinite;
+    border-right: .6em solid transparent;
+    -webkit-animation: typing 10s steps(26, end), /* # of steps = # of characters */
+    blink-caret 1s step-end 5;
+    -moz-animation: typing 10s steps(26, end), /* # of steps = # of characters */
+    blink-caret 1s step-end 3;
 }
 .demo {
     float: right;
     margin: 0 0 10px 10px;
+    width: 240px;
+    height: 364px;
 }
 table {
     border-collapse: collapse;
     width: 100%;
+    border-style: none;
 }
 th,
 td {
     padding: 8px;
     text-align: left;
-    border-bottom: 1px solid #ddd;
+    border-bottom: 1px #ddd;
     vertical-align: middle;
 }
 .attention {
-    font-style: italic
+    font-style: italic;
+}
+.center {
+    text-align: center;
 }
 
 /* #Media Queries
