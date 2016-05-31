@@ -34,20 +34,23 @@ public class MemBot extends TelegramLongPollingBot {
         log.debug("update:{}", update);
         // process if this somebody answer
         if (update.hasMessage()) {
-            if (update.getMessage().getText().startsWith("/botfamily_verification_code")) {
-                try {
-                    log.info("asked token:{}", update);
-                    sendMessage(
-                        new TextMessage(
-                            update.getMessage().getChatId(),
-                            new AppConfig("botfamily.token").value()
-                        )
-                    );
-                } catch (final TelegramApiException e) {
-                    log.error(e.getApiResponse(), e);
+            if (update.getMessage().hasText()) {
+                if (update.getMessage().getText().startsWith("/botfamily_verification_code")) {
+                    try {
+                        log.info("asked token:{}", update);
+                        sendMessage(
+                            new TextMessage(
+                                update.getMessage().getChatId(),
+                                new AppConfig("botfamily.token").value()
+                            )
+                        );
+                    } catch (final TelegramApiException e) {
+                        log.error(e.getApiResponse(), e);
+                    }
+                    return;
                 }
-                return;
             }
+            
             processAsMessage(update);
         }
         if (update.hasInlineQuery()) {
