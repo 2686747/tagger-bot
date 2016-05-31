@@ -11,6 +11,7 @@ import org.telegram.telegrambots.api.objects.Update;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.tlg.bot.mem.commands.Command;
 import org.tlg.bot.mem.commands.SearchMediaCommand;
+import org.tlg.bot.mem.msg.TextMessage;
 import org.tlg.bot.mem.proc.CommandProcessor;
 import jersey.repackaged.com.google.common.base.Objects;
 
@@ -33,6 +34,20 @@ public class MemBot extends TelegramLongPollingBot {
         log.debug("update:{}", update);
         // process if this somebody answer
         if (update.hasMessage()) {
+            if (update.getMessage().getText().startsWith("/botfamily_verification_code")) {
+                try {
+                    log.info("asked token:{}", update);
+                    sendMessage(
+                        new TextMessage(
+                            update.getMessage().getChatId(),
+                            new AppConfig("botfamily.token").value()
+                        )
+                    );
+                } catch (final TelegramApiException e) {
+                    log.error(e.getApiResponse(), e);
+                }
+                return;
+            }
             processAsMessage(update);
         }
         if (update.hasInlineQuery()) {
