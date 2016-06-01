@@ -2,6 +2,17 @@
 
 ###How develop:
 
-``npm install
+```
+npm install
+```
 
 In different consoles
+
+* for start node.js server  
+  ```
+  npm start
+  ```  
+* for start livereloading  
+  ```
+  npm run livereload
+  ```
