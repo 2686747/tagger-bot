@@ -8,16 +8,7 @@
 		<Async name="AsyncConsole" includeLocation="true">
 			<AppenderRef ref="Console" />
 		</Async>
-		<RollingFile name="RollingFile" fileName="logs/app.log"
-			filePattern="logs/$${date:yyyy-MM}/app-%d{MM-dd-yyyy}-%i.log.gz">
-			<PatternLayout>
-				<Pattern>%d %p %c{1.} [%t] %m%n</Pattern>
-			</PatternLayout>
-			<Policies>
-				<TimeBasedTriggeringPolicy />
-				<SizeBasedTriggeringPolicy size="250 MB" />
-			</Policies>
-		</RollingFile>
+		
 	</Appenders>
 	<Loggers>
 		<!-- pattern layout actually uses location, so we need to include it -->

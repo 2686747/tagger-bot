@@ -41,4 +41,19 @@ public class TagsTest {
             new Tags("tag1 tag2 tag3")
         );
     }
+    
+    @Test
+    public void extraSpacesShouldRemoved() {
+        assertEquals(
+            "Tags have to be not equals",
+            new Tags("      tag1    tag2    tag3    "),
+            new Tags("tag1 tag2 tag3")
+        );
+        
+        assertEquals(
+            "Tags count is wrong",
+            3,
+            new Tags("tag1     tag2    tag   ").getTags().size()
+            );
+    }
 }

@@ -5,6 +5,7 @@ package org.tlg.bot.mem.db.domain;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -32,10 +33,15 @@ public class Tags {
     }
     
     private static Set<String> tags(final String tags) {
+        if (tags == null || tags.isEmpty()) {
+            return Collections.emptySet();
+        }
         final Set<String> asList = new LinkedHashSet<>();
-        Arrays.asList(tags.split(DELIM)).forEach(tag -> {
-            asList.add(tag.trim().toLowerCase());
-        });
+        Arrays.asList(
+            tags.replaceAll("\\s+", " ").trim().split(DELIM)).forEach(tag -> {
+                asList.add(tag.trim().toLowerCase());
+            }
+        );
         return asList;
     }
 
@@ -84,8 +90,13 @@ public class Tags {
         if (tags == null) {
             if (other.tags != null)
                 return false;
-        } else if (!tags.containsAll(other.tags))
+        } else if (!tags.containsAll(other.tags)) {
+                return false;
+        } else if (tags.size() != other.tags.size()) {
             return false;
+        }
+            
+        
         return true;
     }
     

@@ -30,9 +30,9 @@ import org.tlg.bot.mem.db.init.DbTest;
  * @author "Maksim Vakhnik"
  *
  */
-public class TagsTest {
+public class RepTagsTest {
     private static final Logger log = LoggerFactory
-        .getLogger(TagsTest.class.getName());
+        .getLogger(RepTagsTest.class.getName());
 
     @Before
     public void setUp() throws SQLException, IOException, URISyntaxException {
