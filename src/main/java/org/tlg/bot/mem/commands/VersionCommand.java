@@ -27,7 +27,7 @@ public class VersionCommand extends ExecuteCommand {
         try {
             getBot().sendMessage(new VersionMessage(this.chatId));
         } catch (final TelegramApiException e) {
-            log.error("Can't send help messagemessage", e);
+            log.error(e.getApiResponse(), e);
         }
         
     }

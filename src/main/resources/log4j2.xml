@@ -2,16 +2,29 @@
 <Configuration status="WARN" monitorInterval="30">
 	<Appenders>
 		<Console name="Console" target="SYSTEM_OUT">
-			<PatternLayout pattern="%d{HH:mm:ss.SSS}{GMT+3} %location %-5level %c{1.} - %msg%n" />
+			<PatternLayout
+				pattern="%d{HH:mm:ss.SSS}{GMT+3} %location %-5level %c{1.} - %msg%n" />
 		</Console>
 		<Async name="AsyncConsole" includeLocation="true">
-			<AppenderRef ref="Console"/>
+			<AppenderRef ref="Console" />
 		</Async>
+		<RollingFile name="RollingFile" fileName="logs/app.log"
+			filePattern="logs/$${date:yyyy-MM}/app-%d{MM-dd-yyyy}-%i.log.gz">
+			<PatternLayout>
+				<Pattern>%d %p %c{1.} [%t] %m%n</Pattern>
+			</PatternLayout>
+			<Policies>
+				<TimeBasedTriggeringPolicy />
+				<SizeBasedTriggeringPolicy size="250 MB" />
+			</Policies>
+		</RollingFile>
 	</Appenders>
 	<Loggers>
 		<!-- pattern layout actually uses location, so we need to include it -->
-		<AsyncLogger name="org.tlg" level="debug" additivity="false" includeLocation="true">
+		<AsyncLogger name="org.tlg" level="debug" additivity="false"
+			includeLocation="true">
 			<AppenderRef ref="AsyncConsole" />
+			<AppenderRef ref="RollingFile" />
 		</AsyncLogger>
 		<Root level="error">
 			<AppenderRef ref="AsyncConsole" />

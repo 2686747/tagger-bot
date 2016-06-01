@@ -10,9 +10,9 @@ import org.telegram.telegrambots.api.objects.Message;
 import org.telegram.telegrambots.api.objects.Update;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.tlg.bot.mem.commands.Command;
+import org.tlg.bot.mem.commands.CommandProcessor;
 import org.tlg.bot.mem.commands.SearchMediaCommand;
 import org.tlg.bot.mem.msg.TextMessage;
-import org.tlg.bot.mem.proc.CommandProcessor;
 import jersey.repackaged.com.google.common.base.Objects;
 
 public class MemBot extends TelegramLongPollingBot {
@@ -31,7 +31,7 @@ public class MemBot extends TelegramLongPollingBot {
 
     @Override
     public void onUpdateReceived(final Update update) {
-        log.debug("update:{}", update);
+        log.debug("update:{}", update.getJson().toString());
         // process if this somebody answer
         if (update.hasMessage()) {
             if (update.getMessage().hasText()) {
@@ -97,7 +97,11 @@ public class MemBot extends TelegramLongPollingBot {
      * @param command
      */
     void execute(final Command command) {
-        command.execute();
+        try {
+            command.execute();
+        } catch (final TelegramApiException e) {
+           log.error(e.getApiResponse(), e);
+        }
     }
 
     public void leaveAwaitQueue(final Command command) {

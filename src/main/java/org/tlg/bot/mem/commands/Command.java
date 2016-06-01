@@ -3,6 +3,7 @@
  */
 package org.tlg.bot.mem.commands;
 
+import org.telegram.telegrambots.TelegramApiException;
 import org.telegram.telegrambots.api.objects.Update;
 
 /**
@@ -12,7 +13,7 @@ import org.telegram.telegrambots.api.objects.Update;
  */
 public interface Command {
 
-    void execute();
+    void execute() throws TelegramApiException;
 
     void resume(Update update);
 

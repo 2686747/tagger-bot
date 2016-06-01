@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.telegram</groupId>
 	<artifactId>taggerbot</artifactId>
-	<version>0.2016.531.2006-SNAPSHOT</version>
+	<version>0.2016.601.2340-SNAPSHOT</version>
 	<properties>
 		<telegrambots.version>dev-SNAPSHOT</telegrambots.version>
 	</properties>
@@ -24,9 +24,9 @@
 
 	<dependencies>
 		<dependency>
-			<groupId>com.github.rubenlagus</groupId>
+			<groupId>com.github.2686747</groupId>
 			<artifactId>TelegramBots</artifactId>
-			<version>${telegrambots.version}</version>
+			<version>fork-dev-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>junit</groupId>
@@ -196,7 +196,7 @@
 						</configuration>
 						<executions>
 							<execution>
-								<id>make-assembly</id> 
+								<id>make-assembly</id>
 								<phase>package</phase>
 								<goals>
 									<goal>single</goal>

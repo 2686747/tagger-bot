@@ -1,17 +1,13 @@
 /**
  * 
  */
-package org.tlg.bot.mem.proc;
+package org.tlg.bot.mem.commands;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.telegram.telegrambots.api.objects.Message;
 import org.telegram.telegrambots.api.objects.Update;
 import org.tlg.bot.mem.MemBot;
-import org.tlg.bot.mem.commands.Command;
-import org.tlg.bot.mem.commands.HelpCommand;
-import org.tlg.bot.mem.commands.UploadCommand;
-import org.tlg.bot.mem.commands.VersionCommand;
 
 /**
  * Process udpate object and return needed command.
@@ -47,12 +43,11 @@ public class CommandProcessor {
             return new HelpCommand(this.bot, message.getChatId());
         }
         // if this is photo or sticker
-        if (message.getSticker() != null || !message.getPhoto().isEmpty()) {
+        if (message.getSticker() != null || 
+            (message.getPhoto() != null && !message.getPhoto().isEmpty())) {
             return new UploadCommand(this.bot, message);
         }
-
-        // if message was not processed
-        return new HelpCommand(this.bot, this.update.getMessage().getChatId());
+        return new UnsupportedMediaCommand(this.bot, this.update.getMessage().getChatId());
 
     }
 
