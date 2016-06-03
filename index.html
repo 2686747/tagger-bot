@@ -2,201 +2,250 @@
 <html>
 
 <head>
-    <meta charset='utf-8'>
-    <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    <link href='https://fonts.googleapis.com/css?family=Chivo:900' rel='stylesheet' type='text/css'>
-    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
-    <link rel="stylesheet" type="text/css" href="stylesheets/github-dark.css" media="screen">
-    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="description" content="Telegram bot TaggsBot is used for tagging media files for quick sending it in a chat">
 
-    <!--[if lt IE 9]>
-    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
-    <title>TaggsBot by 2686747</title>
+    <link rel="stylesheet" type="text/css" href="stylesheets/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="stylesheets/main.css">
+    <title>TaggsBot</title>
+
+    <script>
+        (function(i, s, o, g, r, a, m) {
+            i['GoogleAnalyticsObject'] = r;
+            i[r] = i[r] || function() {
+                (i[r].q = i[r].q || []).push(arguments)
+            }, i[r].l = 1 * new Date();
+            a = s.createElement(o),
+                m = s.getElementsByTagName(o)[0];
+            a.async = 1;
+            a.src = g;
+            m.parentNode.insertBefore(a, m)
+        })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
+
+        ga('create', 'UA-78730531-1', 'auto');
+        ga('send', 'pageview');
+
+    </script>
 </head>
 
 <body>
-    <div id="container">
-        <div class="inner">
 
-            <header>
-                <h1>TaggsBot</h1>
-                <h2>Telegram bot</h2>
-            </header>
+    <div class="navbar navbar-default">
+        <div class="container">
+            <div class="navbar-header">
+                <a href="../" class="navbar-brand">TaggsBot</a>
 
-            <section id="downloads" class="clearfix">
+            </div>
+            <div class="navbar-collapse collapse" id="navbar-main">
+                <ul class="nav navbar-nav">
+                    <li><a href="https://telegram.me/taggsBot" target="_blank">@taggsBot</a></li>
+                </ul>
 
-                <a href="https://github.com/2686747/tagger-bot" id="view-on-github" class="button"><span>View on GitHub</span></a>
-                <a href="https://telegram.me/taggsBot" id="view-on-tlg" class="button"><span>View on Telegram</span></a>
-            </section>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="https://telegram.me/taggsbotchannel" target="_blank">Support on Telegram</a></li>
+                    <li><a href="https://github.com/2686747/tagger-bot" target="_blank">GitHub</a></li>
+                </ul>
 
-            <hr>
+            </div>
+        </div>
+    </div>
 
-            <section id="main_content">
-                <h1>
-<a id="telegram-bot-taggerbot" class="anchor" href="#telegram-bot-taggerbot" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Telegram bot: TaggsBot</h1>
+    <div class="container">
 
-                <p>
-                    <a href="https://telegram.me/taggsBot"><img src="http://trellobot.doomdns.org/telegrambadge.svg" alt="taggsBot"></a>
-                </p>
+        <div class="page-header" id="banner">
+            <div class="row">
+                <div class="col-lg-8 col-md-7 col-sm-6">
+                    <p class="lead">Telegram bot</p>
+                </div>
 
-                <h2>
-<a id="description" class="anchor" href="#description" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Description</h2>
-
-                <p>Telegram bot is used for tagging media files for quick sending it in a chat. Bot tags your photos and stickers. Just send photo or media to the bot and he will ask you about tags for these medias. After saving you can get your pictures by tags in any chat. Just input
-                    <p class="typewriter">@taggsBot tag othertag ...</p> and bot will show you your pictures. </p>
-                <hr>
-                <h2>
-<a id="description" class="anchor" href="#description" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Quick start</h2>
-
-                <h3>
-<a id="description" class="anchor" href="#startBot" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Start bot</h3>
-                <div>Start bot (find <strong>taggsBot</strong> between users or click by <a href="https://telegram.me/taggsBot">@taggsBot</a> if you use web client)</div>
-
-
-                <h3>Tag it</h3>
-
-
-
-
-                <table>
-                    <tr>
-                        <th>
-                            <div>
-
-                                Send photo or sticker to <strong>@taggsBot</strong> and input your tags.
-
-                            </div>
-                            <div class="attention">
-
-                                Don't forget do it in chat with <strong>@taggsBot</strong>
-
-                            </div>
-                        </th>
-                        <th>
-                            <div class="demo">
-                                <img alt="Telegram bot: add tags to photo with taggsBot" src="images/gif/mb_addPictures_1.gif"></img>
-                            </div>
-
-                        </th>
-
-                    </tr>
-                </table>
-
-
-                <p></p>
-                <table>
-                    <tr>
-
-                        <th>
-
-                            <div class="demo">
-                                <img alt="Telegram bot: add tags to photo with taggsBot" src="images/gif/mb_sendSavedPicture.gif"></img>
-                            </div>
-                        </th>
-                        <th>
-                            <div>
-                                In chat with somebody just input
-                                <div class="typewriter">@taggsBot tag othertag ...</div>
-                                and <strong>@taggsBot</strong> will show you your tags
-
-                            </div>
-
-                        </th>
-                    </tr>
-                </table>
-
-                <table>
-                    <tr>
-                        <th>
-                            <div>
-                                If you want to see and select from all your tags - just input
-                                <div class="typewriter">@taggsBot %</div>
-
-                            </div>
-                        </th>
-                        <th>
-                            <div class="demo">
-                                <img alt="Telegram bot: add tags to photo with taggsBot" src="images/gif/mb_chooseFromAll.gif"></img>
-                            </div>
-                        </th>
-
-                    </tr>
-                </table>
-                <p></p>
-                <hr>
-                <h3>
-<a id="description" class="anchor" href="#editTags" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Edit your tags</h3>
-                <table>
-                    <tr>
-                        <th>
-                            <div>
-                                In chat with <strong>@taggsBot</strong> select needed media and send it back to bot. Here you can input new tags, completely delete your picture or just cancel operation.
-
-                            </div>
-                        </th>
-                        <th>
-                            <div class="demo">
-                                <img alt="Telegram bot: add tags to photo with taggsBot" src="images/gif/mb_editTags.gif"></img>
-                            </div>
-                        </th>
-
-                    </tr>
-                </table>
-                <table>
-                    <tr>
-                        <th>
-                            <div class="demo">
-                                <img alt="Telegram bot: add tags to photo with taggsBot" src="images/gif/mb_deletePicture.gif"></img>
-                            </div>
-                        </th>
-                        <th>
-                            <div>
-                                When bot will ask you about new tags - just press button "/delete" or input:
-                                <div class="typewriter">/delete</div>
-                            </div>
-                        </th>
-
-
-                    </tr>
-                </table>
-                <hr>
-                <div class="center">
-                    <h3>Still have you questions?</h3>
-                    <div class="center">
-                        <p><a href="https://telegram.me/taggsBotChannel" id="tlgChannel" class="button tlgChannel"><span>taggsBotChannel</span></a></p>
-
-
+            </div>
+            <div class="row">
+                <div class="col-lg-3 col-md-3 col-sm-4">
+                    <div class="list-group table-of-contents">
+                        <a class="list-group-item" href="#description">Description</a>
+                        <a class="list-group-item" href="#startbot">Start bot</a>
+                        <a class="list-group-item" href="#newtags">Create tags</a>
+                        <a class="list-group-item" href="#sendtags">Send tags</a>
+                        <a class="list-group-item" href="#edittags">Edit tags</a>
+                        <a class="list-group-item" href="#questions">Questions</a>
                     </div>
                 </div>
-                <footer>
-                    TaggsBot is maintained by <a href="https://github.com/2686747">2686747</a>
-                    <br> This page was generated by <a href="https://pages.github.com">GitHub Pages</a>. Tactile theme by <a href="https://twitter.com/jasonlong">Jason Long</a>.
-                    <a id="license" class="anchor" href="#license" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>License
+                <div class="col-md-8 lead">
+                    <div class="row">
 
-                    <p>This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.</p>
+                        <h4 id="description">Description</h4>
+                        <div>Telegram bot is used for tagging media files for quick sending it in a chat. Bot tags your photos and stickers. Just send photo or media to the bot and he will ask you about tags for these medias. After saving you can get your pictures by tags in any chat. Just input
+                            <div>
 
-                </footer>
+                                <kbd>
+                                    @taggsBot tag othertag ...</kbd>
+
+                            </div>
+                            and bot will show you your pictures.
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <h4 id="startbot">Start bot</h4>
+                        <div>Start bot (find <span class="bot">@taggsBot</span> between users or click by <a href="https://telegram.me/taggsBot">@taggsBot</a>)</div>
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <h4 id="newtags">Create tags</h4>
+                        <div>
+                            Send photo or sticker to <span class="bot">@taggsBot</span> and input your tags.
+                        </div>
+                        <div>
+                            Don't forget do it in chat with <span class="bot">@taggsBot</span>
+                        </div>
+                        <div class="media">
+
+                            <div class="media-left shadowed">
+
+                                <video controls class="preview">
+                                    <source src="video/mb_addPictures_1.mp4" type="video/mp4" />
+                                </video>
+
+
+                            </div>
+                            <div class="media-body">
+                                <div>
+                                    You can send photo or sticker by means of other bot
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="media">
+                            <div class="media-body">
+                                You can forward it from other chat.
+                            </div>
+                            <div class="media-right shadowed">
+
+                                <video controls class="preview">
+                                    <source src="video/mb_addPictures_2.mp4" type="video/mp4" />
+                                </video>
+
+                            </div>
+
+
+                        </div>
+                        <div class="media">
+
+                            <div class="media-left shadowed">
+
+                                <video controls class="preview">
+                                    <source src="video/mb_addPictures_3.mp4" type="video/mp4" />
+                                </video>
+                            </div>
+                            <div class="media-body">
+                                Or you can directly upload your media
+                            </div>
+
+                        </div>
+                    </div>
+                    <hr>
+
+                    <div class="row">
+                        <h4 id="sendtags">Send tags</h4>
+                        <div class="media">
+                            <div class="media-left shadowed">
+                                <video controls class="preview">
+                                    <source src="video/mb_sendSavedPicture.mp4" type="video/mp4" />
+                                </video>
+                            </div>
+                            <div class="media-body">
+                                Choose saved media: just start input needed tag
+                                <div>
+                                    <kbd>
+                                        @taggsBot tag othertag ...
+                                    </kbd>
+                                </div>
+
+                                and all medias with this tags will be available.
+                                <div> Of course you can input more than one tag. </div>
+                            </div>
+                        </div>
+                        <div class="media">
+                            <div class="media-body">
+                                If you want to see all your medias just input
+                                <div>
+                                    <kbd>
+                                        @taggsBot %
+                                    </kbd>
+                                </div>
+                            </div>
+                            <div class="media-right shadowed">
+                                <video controls class="preview">
+                                    <source src="video/mb_chooseFromAll.mp4" type="video/mp4" />
+                                </video>
+                            </div>
+                        </div>
+                    </div>
+
+                    <hr>
+                    <div class="row">
+                        <h4 id="edittags">Edit tags</h4>
+                        <div class="media">
+                            <div class="media-right shadowed">
+                                <video controls class="preview">
+                                    <source src="video/mb_editTags.mp4" type="video/mp4" />
+                                </video>
+                            </div>
+                            <div class="media-body">
+                                If you have to edit your tags - select (or send repeatedly) your media and send it back to bot. Bot will ask you about new tags. Input and save.
+                            </div>
+                        </div>
+                        <div class="media">
+                            <div class="media-body">
+                                For removing your tags from bot memory - send him needed media and press button "/delete".
+                                <div>Command
+                                    <div>
+                                        <kbd>
+                                        @taggsBot /delete
+                                    </kbd>
+                                    </div>
+                                    also will work.
+                                </div>
+                            </div>
+                            <div class="media-right shadowed">
+                                <video controls class="preview">
+                                    <source src="video/mb_deletePicture.mp4" type="video/mp4" />
+                                </video>
+                            </div>
+                        </div>
+                    </div>
+
+                    <hr>
+                    <div class="row">
+                        <h4 id="questions">Any questions?</h4>
+                        <div>
+                            Don't hesitate to post your questions in
+                            <a href="https://telegram.me/taggsbotchannel" target="_blank">support channel</a>.
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container" />
+    <footer>
+        TaggsBot is maintained by <a href="https://github.com/2686747">2686747</a>
+        <div>
+            License: This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
         </div>
 
+
+
+
+    </footer>
     </div>
 
-    </p>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.2/js/bootstrap.min.js" integrity="sha384-vZ2WRJMwsjRMW/8U7i6PWi6AlO1L79snBrmgiDpgIWJ82z8eA5lenwvxbMV1PAh7" crossorigin="anonymous"></script>
 
-
-    </div>
-    </div>
-
-<script>
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-
-  ga('create', 'UA-78730531-1', 'auto');
-  ga('send', 'pageview');
-
-</script>
 
 </body>
 

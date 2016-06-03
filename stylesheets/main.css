@@ -1,0 +1,18 @@
+video {
+    width: 372px;
+    height: 594px;
+    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2), 0 3px 10px 0 rgba(0, 0, 0, 0.19);
+}
+kbd {
+    background-color: #B4B1B1;
+}
+.bot {
+    color: #000;
+}
+.preview {
+    width: 220px;
+    height: auto;
+}
+.shadowed {
+    padding: 10px;
+}
