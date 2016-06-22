@@ -15,9 +15,7 @@ export default class Tags extends Component {
             }
             />; 
         });
-        return <div > {
-            tagsBtn
-        } < /div >
+        return <div >{tagsBtn}< /div >
     }
 }
 
