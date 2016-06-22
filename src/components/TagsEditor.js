@@ -7,26 +7,46 @@ var Media = {
     id:''
 };
 var MediaView = React.createClass({
+    onChangeTags: function(tagsString) {
+        this.setState({
+            tags: this.strToTags(tagsString)
+        });
+    }, 
     render: function() {
         console.debug(' this.props.tags',  this.props.tags);
-        var tags = [];
-        this.props.tags.forEach(function(tag){
-            tags.push(<Tag tag = {tag.tag} key = {tag.tag} />);
-        });
+        // var tags = [];
+        // this.props.tags.forEach(function(tag){
+            // tags.push(<Tag tag = {tag.tag} key = {tag.tag} />);
+        // });
         return (
-            <div className = 'text-xs-center'>
             <div className='media-left '>
-                <div>{tags}</div>
+                <div><Tags tags = {this.props.tags} /></div>
                 <img src={this.props.url} alt={this.props.url}/>
-            </div>
             </div>
         );
     }
 });
-var Tag = React.createClass({
+var Tags = React.createClass({
+    onChangeTags: function() {
+        this.props.onChangeTags(this.refs.tagsInput.value);
+    },
     render: function () {
+        var tags = this.props.tags.map(function(tag){
+            return tag.tag;
+        }).reduce(function(prev, curr){
+            return prev + "  " + curr;
+        });
         return (
-            <button type='button' className='btn btn-info'> { this.props.tag } </button>
+                <div className="input-group">
+                <span className="input-group-addon">
+                    <input type="checkbox" aria-label="Checkbox for following text input"  />
+                    </span>
+                    <input type="text" className="form-control"
+                        aria-label="Text input with checkbox"
+                        value = {this.props.tags} onChange = {this.onChangeTags}
+                        ref="tagsInput"
+                    />
+                </div>
         );
     }
 });
