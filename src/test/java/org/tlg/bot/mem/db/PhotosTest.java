@@ -11,14 +11,16 @@ import org.junit.Test;
 import org.tlg.bot.mem.db.domain.BasePicture;
 import org.tlg.bot.mem.db.domain.Picture;
 import org.tlg.bot.mem.db.domain.TlgMediaType;
-import org.tlg.bot.mem.db.ds.DsHikari;
 import org.tlg.bot.mem.db.init.DbTest;
+import org.vmk.db.ds.Ds;
+import helper.db.TestDs;
 
 public class PhotosTest {
-    
+    private Ds ds;
     @Before
     public void setUp() throws SQLException, IOException, URISyntaxException {
-        new DbTest(DsHikari.ds()).create();
+        this.ds = new TestDs();
+        new DbTest(this.ds).create();
     }
     @Test
     public void saveRead() throws SQLException {
@@ -26,9 +28,9 @@ public class PhotosTest {
         final Integer userId = 1;
         final Picture saved =
             new BasePicture(userId, photoId, TlgMediaType.PHOTO);
-        new RepPictures(DsHikari.ds()).save(saved);
+        new RepPictures(this.ds).save(saved);
         final Optional<Picture> found =
-            new RepPictures(DsHikari.ds()).find(photoId);
+            new RepPictures(this.ds).find(photoId);
         MatcherAssert.assertThat(
             "Photos ain't equals", saved, Matchers.equalTo(found.get())
             );

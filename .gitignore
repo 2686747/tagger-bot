@@ -9,3 +9,4 @@ target
 src/main/java/tools/**
 .lib
 
+test-output/**

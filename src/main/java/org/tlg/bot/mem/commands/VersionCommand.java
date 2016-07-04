@@ -16,7 +16,7 @@ public class VersionCommand extends ExecuteCommand {
         .getLogger(VersionCommand.class.getName());
     
     private final Long chatId;
-
+    
     public VersionCommand(final MemBot bot, final Long chatId) {
         super(bot);
         this.chatId = chatId;

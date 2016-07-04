@@ -23,8 +23,9 @@ import org.tlg.bot.mem.db.domain.MediaTags;
 import org.tlg.bot.mem.db.domain.Picture;
 import org.tlg.bot.mem.db.domain.Tags;
 import org.tlg.bot.mem.db.domain.TlgMediaType;
-import org.tlg.bot.mem.db.ds.DsHikari;
 import org.tlg.bot.mem.db.init.DbTest;
+import org.vmk.db.ds.Ds;
+import helper.db.TestDs;
 
 /**
  * @author "Maksim Vakhnik"
@@ -33,10 +34,11 @@ import org.tlg.bot.mem.db.init.DbTest;
 public class RepTagsTest {
     private static final Logger log = LoggerFactory
         .getLogger(RepTagsTest.class.getName());
-
+    private Ds ds;
     @Before
     public void setUp() throws SQLException, IOException, URISyntaxException {
-        new DbTest(DsHikari.ds()).create();
+        this.ds = new TestDs();
+        new DbTest(this.ds).create();
     }
 
     @Test
@@ -50,15 +52,15 @@ public class RepTagsTest {
         final Tags tags2 = new Tags("tag2 tag3");
         final MediaTags pht1 = new MediaTags(saved1, tags1);
         final MediaTags pht2 = new MediaTags(saved2, tags2);
-        new RepTags(DsHikari.ds()).save(pht1);
-        new RepTags(DsHikari.ds()).save(pht2);
+        new RepTags(this.ds).save(pht1);
+        new RepTags(this.ds).save(pht2);
         assertTrue(
             "Saved picture returns as not present",
-            new RepTags(DsHikari.ds()).isSaved(saved1)
+            new RepTags(this.ds).isSaved(saved1)
         );
         assertTrue(
             "Saved picture returns as not present",
-            new RepTags(DsHikari.ds()).isSaved(saved2)
+            new RepTags(this.ds).isSaved(saved2)
         );
     }
     
@@ -71,10 +73,10 @@ public class RepTagsTest {
         final String tag1 = "tag1";
         final Tags tags1 = new Tags(tag1 + " tag2 tag3");
         final MediaTags pht1 = new MediaTags(saved1, tags1);
-        new RepTags(DsHikari.ds()).save(pht1);
+        new RepTags(this.ds).save(pht1);
         assertFalse(
             "Unsaved picture returns as  present",
-            new RepTags(DsHikari.ds()).isSaved(saved2)
+            new RepTags(this.ds).isSaved(saved2)
         );
     }
     
@@ -87,7 +89,7 @@ public class RepTagsTest {
         final String tag2 = "newTag1";
         final Tags tags2 = new Tags(tag2 + " newTag2 newTag3");
         final MediaTags mTagsOrig = new MediaTags(saved1, tags1);
-        final RepTags repTags = new RepTags(DsHikari.ds());
+        final RepTags repTags = new RepTags(this.ds);
         repTags.save(mTagsOrig);
         final MediaTags mTagsUpdated = new MediaTags(saved1, tags2);
         ;
@@ -109,9 +111,9 @@ public class RepTagsTest {
         final Tags srchTag = new Tags(tag1);
         final MediaTags pht1 = new MediaTags(saved1, tags1);
         final MediaTags pht2 = new MediaTags(saved2, tags2);
-        new RepTags(DsHikari.ds()).save(pht1);
-        new RepTags(DsHikari.ds()).save(pht2);
-        final Collection<Picture> photos = new RepTags(DsHikari.ds())
+        new RepTags(this.ds).save(pht1);
+        new RepTags(this.ds).save(pht2);
+        final Collection<Picture> photos = new RepTags(this.ds)
             .findByTags(srchTag, userId);
         MatcherAssert.assertThat("Result of tags is not correct", photos,
             Matchers.hasSize(1));
@@ -127,8 +129,8 @@ public class RepTagsTest {
         final String tag1 = "tag1";
         final Tags tags1 = new Tags(tag1 + " tag2 tag3");
         final MediaTags pht1 = new MediaTags(saved1, tags1);
-        new RepTags(DsHikari.ds()).save(pht1);
-        final Optional<Tags> testTags = new RepTags(DsHikari.ds())
+        new RepTags(this.ds).save(pht1);
+        final Optional<Tags> testTags = new RepTags(this.ds)
             .findTagsByFileId(saved1);
         tags1.getTags().forEach(existedTag -> {
             if (!testTags.get().getTags().contains(existedTag)) {
@@ -147,10 +149,10 @@ public class RepTagsTest {
         final String tag1 = "tag1";
         final Tags tags1 = new Tags(tag1 + " tag2 tag3");
         final MediaTags pht1 = new MediaTags(saved1, tags1);
-        new RepTags(DsHikari.ds()).save(pht1);
+        new RepTags(this.ds).save(pht1);
         assertFalse(
             "Tags don't have to exist",
-            new RepTags(DsHikari.ds()).findTagsByFileId(unsaved).isPresent()
+            new RepTags(this.ds).findTagsByFileId(unsaved).isPresent()
             );
     }
 
@@ -167,20 +169,20 @@ public class RepTagsTest {
             final Picture ph2 = new BasePicture(user2, String.valueOf(i),
                 TlgMediaType.PHOTO);
             final Tags tags = new Tags("tag" + i);
-            new RepTags(DsHikari.ds()).save(new MediaTags(ph1, tags));
-            new RepTags(DsHikari.ds()).save(new MediaTags(ph2, tags));
+            new RepTags(this.ds).save(new MediaTags(ph1, tags));
+            new RepTags(this.ds).save(new MediaTags(ph2, tags));
         }
         final Tags tags = new Tags("tag");
         log.debug("start search pictures by tags [{}]", tags);
         final long s = System.nanoTime();
-        final Collection<Picture> photos = new RepTags(DsHikari.ds())
+        final Collection<Picture> photos = new RepTags(this.ds)
             .findByTags(tags, user1);
         final long e = System.nanoTime();
         log.debug("search time:{},ms", (e - s) * 1e-9);
         MatcherAssert.assertThat("Result of tags is not correct", photos,
             Matchers.hasSize(pict));
 
-        final Collection<Picture> partOfPhotos = new RepTags(DsHikari.ds())
+        final Collection<Picture> partOfPhotos = new RepTags(this.ds)
             .findByTags(new Tags("tag499"), user2);
         MatcherAssert.assertThat("Result of tags is not correct", partOfPhotos,
             Matchers.hasSize(11));
