@@ -46,12 +46,11 @@ public class RsTagsEditorTest extends JerseyTestNg.ContainerPerClassTest {
         final String url = new PageUrl(new PageLink(1L, 1L)).getUrl();
         final Response response = target(url).request().get();
         assertThat(response.getStatus(), equalTo(404));
-       
     }
     
     //TODO check real page
     @Test
-    public void correctUrlShouldReturnCorrectPage()
+    public void correctEsixtedUrlShouldReturnCorrectPage()
         throws SQLException, IOException, URISyntaxException {
         final TestDs ds = new TestDs();
         new DbTest(ds).create();
