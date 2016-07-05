@@ -1,6 +1,7 @@
 package org.tlg.bot.mem.web.rest;
 
 
+import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.Assert.assertThat;
 import java.io.IOException;
@@ -14,7 +15,6 @@ import org.glassfish.jersey.test.JerseyTestNg;
 import org.testng.annotations.Test;
 import org.tlg.bot.mem.db.RepPageLinks;
 import org.tlg.bot.mem.db.domain.PageLink;
-import org.tlg.bot.mem.db.domain.PageUrl;
 import org.tlg.bot.mem.db.init.DbTest;
 import helper.db.TestDs;
 
@@ -23,8 +23,8 @@ import helper.db.TestDs;
  * @author Maksim Vakhnik
  *
  */
+//TODO server to diff port
 public class RsTagsEditorTest extends JerseyTestNg.ContainerPerClassTest {
-    private TestDs ds;
 
     @Override
     protected Application configure() {
@@ -43,7 +43,7 @@ public class RsTagsEditorTest extends JerseyTestNg.ContainerPerClassTest {
    
     @Test
     public void correctNonexistedUrlShouldReturn404() {
-        final String url = new PageUrl(new PageLink(1L, 1L)).getUrl();
+        final String url = new PageLink(1L, 1L).getUrl();
         final Response response = target(url).request().get();
         assertThat(response.getStatus(), equalTo(404));
     }
@@ -60,9 +60,10 @@ public class RsTagsEditorTest extends JerseyTestNg.ContainerPerClassTest {
         new RepPageLinks(ds).create(userId);
         final Optional<PageLink> pl = new RepPageLinks(ds).findByUserId(userId);
         final PageLink pageLink = pl.get();
-        final String url = new PageUrl(pageLink).getUrl();
+        final String url = pageLink.getUrl();
         final Response response = target(url).request().get();
         assertThat(response.getStatus(), equalTo(200));
+        assertThat(response.getEntity().toString(), containsString("Tags editor"));
        
     }
 }

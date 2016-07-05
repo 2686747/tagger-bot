@@ -3,11 +3,15 @@
  */
 package org.tlg.bot.mem.web.rest;
 
+import javax.inject.Inject;
+import javax.validation.constraints.NotNull;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import org.tlg.bot.mem.db.RepPageLinks;
+import org.vmk.db.ds.Ds;
 
 /**
  * Bot will return url to /edit tag. This url will be processed by this 
@@ -17,6 +21,15 @@ import javax.ws.rs.core.MediaType;
  */
 @Path("/")
 public class RsTagsEditor {
+    
+    private final Ds ds;
+    
+    @Inject
+    public RsTagsEditor(final Ds ds) {
+        this.ds = ds;
+    }
+
+
     /**
      * Checks url, return page or 404
      * @return correct html page for editing 
@@ -24,8 +37,14 @@ public class RsTagsEditor {
     @GET
     @Path("{page}")
     @Produces(MediaType.TEXT_HTML)
-    public String getPage(@PathParam("page") final String page) {
+    public String getPage(@NotNull @PathParam("page") final String page) {
+        final RepPageLinks rpl = new RepPageLinks(this.getDs());
         
-        return String.format("<div>Hello, from %s</div>", page);
+        return String.format("<div>Hello, from %s</div>", ds);
+    }
+
+
+    public Ds getDs() {
+        return ds;
     }
 }

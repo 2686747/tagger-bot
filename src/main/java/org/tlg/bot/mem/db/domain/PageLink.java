@@ -3,14 +3,19 @@
  */
 package org.tlg.bot.mem.db.domain;
 
+import java.util.Base64;
+import org.tlg.bot.mem.exceptions.WrongUrlException;
+
 /**
- * Tag edit page
+ * Tag edit page link. Decode/encode url to/from userId, created.
  * @author "Maksim Vakhnik"
  *
  */
 public class PageLink {
  
     public static final Object TABLE = "PageLinks";
+
+    private static final String DELIM = "%";
     
     private final long userId;
     private final long created;
@@ -20,12 +25,64 @@ public class PageLink {
         this.created = created;
     }
 
+    public PageLink(final String url) throws WrongUrlException {
+        this(PageLink.id(url), PageLink.created(url));
+    }
+
     public long getCreated() {
-        return created;
+        return this.created;
+    }
+
+    private static String decode(final String url) {
+        return new String(Base64.getUrlDecoder().decode(url));
     }
 
     public long getUserId() {
-        return userId;
+        return this.userId;
+    }
+    
+    private static long created(final String url) throws WrongUrlException {
+        final String decoded = PageLink.decode(url);
+        try {
+            return Long.valueOf(decoded.substring(
+                decoded.indexOf(PageLink.DELIM) + 1, decoded.length()
+                )
+            );
+        } catch (final Exception e) {
+            throw new WrongUrlException(url);
+        }
+        
+    }
+
+    private static long id(final String url) throws WrongUrlException {
+        final String decoded = PageLink.decode(url);
+        try {
+            return Long.valueOf(
+                decoded.substring(0, decoded.indexOf(PageLink.DELIM))
+                );
+        } catch (final Exception e) {
+            throw new WrongUrlException(url);
+        }
+    }
+
+    public String getUrl() {
+        return PageLink.url(this.getUserId(), this.getCreated());
+    }
+    /**
+     * Creates short url from pageLink
+     * @param pageLink
+     * @return
+     */
+    private static String url(final long userId, final long created) {
+        return Base64.getUrlEncoder().encodeToString(
+            (
+                new StringBuilder()
+                    .append(String.valueOf(userId))
+                    .append(DELIM)
+                    .append(String.valueOf(created))
+                    .toString()      
+            ).getBytes()
+        );
     }
 
     @Override
@@ -63,6 +120,5 @@ public class PageLink {
             return false;
         return true;
     }
-
 
 }
