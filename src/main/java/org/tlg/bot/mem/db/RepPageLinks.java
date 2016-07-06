@@ -33,7 +33,7 @@ public class RepPageLinks {
      * @param userId
      * @throws SQLException 
      */
-    public void create(final long userId) throws SQLException {
+    public void create(final int userId) throws SQLException {
         try (final Connection conn = ds.dataSource().getConnection()) {
             final Optional<PageLink> pageUrl = findByUserId(userId);
             if (pageUrl.isPresent()) {
@@ -44,7 +44,7 @@ public class RepPageLinks {
         } 
     }
 
-    private void save(final Connection conn, final long userId) throws SQLException {
+    private void save(final Connection conn, final int userId) throws SQLException {
         final StringBuilder sql = new StringBuilder("INSERT INTO ");
         sql.append(PageLink.TABLE)
             .append(" (user_id, created) VALUES (?, ?)");
@@ -56,7 +56,7 @@ public class RepPageLinks {
         
     }
 
-    private void delete(final Connection conn, final long userId)
+    private void delete(final Connection conn, final int userId)
         throws SQLException {
         final StringBuilder sql = new StringBuilder("DELETE FROM ");
         sql.append(PageLink.TABLE)
@@ -68,17 +68,17 @@ public class RepPageLinks {
 
     }
 
-    public Optional<PageLink> findByUserId(final long userId)
+    public Optional<PageLink> findByUserId(final int userId)
         throws SQLException {
         try (final Connection conn = ds.dataSource().getConnection()) {
             final PreparedStatement ps = conn.prepareStatement(
                 new StringBuilder("SELECT * FROM ").append(PageLink.TABLE)
                     .append(" WHERE user_id = ?").toString());
-            ps.setLong(1, userId);
+            ps.setInt(1, userId);
             final ResultSet rs = ps.executeQuery();
             if (rs.next()) {
                 return Optional.of(
-                    new PageLink(rs.getLong("user_id"), rs.getLong("created")));
+                    new PageLink(rs.getInt("user_id"), rs.getLong("created")));
             }
         }
         return Optional.empty();

@@ -9,6 +9,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -146,7 +148,7 @@ public class RepTags {
             log.debug("findByTags:{}", ps);
             final ResultSet rs = ps.executeQuery();
 
-            return RepTags.rsTags(rs);
+            return RepTags.pictures(rs);
         }
     }
 
@@ -163,7 +165,7 @@ public class RepTags {
         }
     }
 
-    private static Collection<Picture> rsTags(final ResultSet rs)
+    private static Collection<Picture> pictures(final ResultSet rs)
         throws SQLException {
         final Collection<Picture> result = new ArrayList<>();
         while (rs.next()) {
@@ -174,4 +176,42 @@ public class RepTags {
         return result;
     }
 
+    public Collection<MediaTags> findUserMediaTags(final Integer userId)
+        throws SQLException {
+        try (final Connection conn = ds.dataSource().getConnection()) {
+            final StringBuilder sql = new StringBuilder("SELECT * FROM ")
+                .append(MediaTags.TABLE)
+                .append(" WHERE user_id = ?");
+            final PreparedStatement ps = conn.prepareStatement(sql.toString());
+            ps.setInt(1, userId);
+            final ResultSet rs = ps.executeQuery();
+            return RepTags.mediaTags(rs);
+        }
+    }
+
+    private static Collection<MediaTags> mediaTags(final ResultSet rs)
+        throws SQLException {
+        final Collection<MediaTags> result = new ArrayList<>();
+        final Map<Picture, Collection<String>> tags = new HashMap<>();
+        while (rs.next()) {
+            final Picture picture = new BasePicture(
+                rs.getInt("user_id"),
+                rs.getString("photo_id"),
+                TlgMediaType.get(rs.getByte("media_type"))
+                );
+            final Collection<String> picTags =
+                tags.getOrDefault(picture, new ArrayList<>());
+            picTags.add(rs.getString("tag_id"));
+            tags.put(
+                picture,
+                picTags
+            );
+        }
+        tags.forEach((pic, picTags) -> {
+            result.add(new MediaTags(pic, new Tags(picTags)));
+        });
+        return result;
+    }
+
+    
 }

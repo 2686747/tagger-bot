@@ -32,7 +32,7 @@ public class RepPageLinksTest {
     
     @Test
     public void createShouldReturnCorrectEntity() throws SQLException {
-        final long userId = 1L;
+        final int userId = 1;
         final long testTime = System.nanoTime();
         new RepPageLinks(this.ds).create(userId);
         final Optional<PageLink> pl = new RepPageLinks(this.ds).findByUserId(userId);

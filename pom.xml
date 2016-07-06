@@ -8,6 +8,7 @@
 	<properties>
 		<telegrambots.version>dev-SNAPSHOT</telegrambots.version>
 		<version.hikaricp>2.4.6</version.hikaricp>
+		<version.jersey>2.23.1</version.jersey>
 	</properties>
 
 	<repositories>
@@ -28,8 +29,13 @@
 		<dependency>
 			<groupId>org.glassfish.jersey</groupId>
 			<artifactId>jersey-bom</artifactId>
-			<version>2.23.1</version>
+			<version>${version.jersey}</version>
 			<type>pom</type>
+		</dependency>
+		<dependency>
+			<groupId>org.glassfish.jersey.ext</groupId>
+			<artifactId>jersey-mvc-freemarker</artifactId>
+			<version>${version.jersey}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.github.2686747</groupId>
@@ -111,7 +117,7 @@
 		<dependency>
 			<groupId>org.glassfish.jersey.test-framework.providers</groupId>
 			<artifactId>jersey-test-framework-provider-grizzly2</artifactId>
-			<version>2.23.1</version>
+			<version>${version.jersey}</version>
 			<scope>test</scope>
 		</dependency>
 

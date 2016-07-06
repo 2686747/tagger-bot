@@ -17,10 +17,10 @@ public class PageLink {
 
     private static final String DELIM = "%";
     
-    private final long userId;
+    private final int userId;
     private final long created;
 
-    public PageLink(final long userId, final long created) {
+    public PageLink(final int userId, final long created) {
         this.userId = userId;
         this.created = created;
     }
@@ -33,11 +33,15 @@ public class PageLink {
         return this.created;
     }
 
-    private static String decode(final String url) {
-        return new String(Base64.getUrlDecoder().decode(url));
+    private static String decode(final String url) throws WrongUrlException {
+        try {
+            return new String(Base64.getUrlDecoder().decode(url));
+        } catch (final Exception e) {
+            throw new WrongUrlException(url);
+        }
     }
 
-    public long getUserId() {
+    public int getUserId() {
         return this.userId;
     }
     
@@ -54,10 +58,10 @@ public class PageLink {
         
     }
 
-    private static long id(final String url) throws WrongUrlException {
+    private static int id(final String url) throws WrongUrlException {
         final String decoded = PageLink.decode(url);
         try {
-            return Long.valueOf(
+            return Integer.valueOf(
                 decoded.substring(0, decoded.indexOf(PageLink.DELIM))
                 );
         } catch (final Exception e) {
@@ -101,7 +105,7 @@ public class PageLink {
         final int prime = 31;
         int result = 1;
         result = prime * result + (int) (created ^ (created >>> 32));
-        result = prime * result + (int) (userId ^ (userId >>> 32));
+        result = prime * result + userId;
         return result;
     }
 
@@ -120,5 +124,6 @@ public class PageLink {
             return false;
         return true;
     }
+
 
 }

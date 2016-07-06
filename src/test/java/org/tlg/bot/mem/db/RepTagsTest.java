@@ -3,8 +3,10 @@
  */
 package org.tlg.bot.mem.db;
 
+import static org.hamcrest.Matchers.contains;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import java.io.IOException;
@@ -159,7 +161,7 @@ public class RepTagsTest {
     @Test
     public void savePhotosFindByIncompleteTag() throws SQLException {
         // pictures both users
-        final int pict = 5000;
+        final int pict = 500;
         final Integer user1 = 1;
         final Integer user2 = 2;
         log.debug("start save {} pictures...", pict);
@@ -182,10 +184,28 @@ public class RepTagsTest {
         MatcherAssert.assertThat("Result of tags is not correct", photos,
             Matchers.hasSize(pict));
 
+        //this should pict/
         final Collection<Picture> partOfPhotos = new RepTags(this.ds)
-            .findByTags(new Tags("tag499"), user2);
+            .findByTags(new Tags("tag49"), user2);
         MatcherAssert.assertThat("Result of tags is not correct", partOfPhotos,
             Matchers.hasSize(11));
-        // H2Console.main();
+    }
+    
+    @Test
+    public void userTagsShouldReturnAllUserTagMedia() throws SQLException {
+        final Integer userId = 1;
+        final Picture saved1 = new BasePicture(userId, "1", TlgMediaType.PHOTO);
+        final String tag1 = "tag1";
+        final Tags tags1 = new Tags(tag1 + " tag2 tag3");
+        final MediaTags pht1 = new MediaTags(saved1, tags1);
+        final Picture saved2 = new BasePicture(userId, "2", TlgMediaType.PHOTO);
+        final Tags tags2 = new Tags("tag22 tag23");
+        final MediaTags pht2 = new MediaTags(saved2, tags2);
+        new RepTags(this.ds).save(pht1);
+        new RepTags(this.ds).save(pht2);
+        final Collection<MediaTags> testTags = new RepTags(this.ds)
+            .findUserMediaTags(userId);
+        assertThat(testTags, contains(pht1, pht2));
+        
     }
 }
