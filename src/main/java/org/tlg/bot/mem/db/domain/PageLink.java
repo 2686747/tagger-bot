@@ -3,8 +3,7 @@
  */
 package org.tlg.bot.mem.db.domain;
 
-import java.util.Base64;
-import org.tlg.bot.mem.exceptions.WrongUrlException;
+import org.tlg.bot.mem.util.EncodedPageLink;
 
 /**
  * Tag edit page link. Decode/encode url to/from userId, created.
@@ -15,87 +14,34 @@ public class PageLink {
  
     public static final Object TABLE = "PageLinks";
 
-    private static final String DELIM = "%";
+    private final EncodedPageLink encoded;
     
-    private final int userId;
-    private final long created;
-
     public PageLink(final int userId, final long created) {
-        this.userId = userId;
-        this.created = created;
+        this(new EncodedPageLink(userId, created));
     }
 
-    public PageLink(final String url) throws WrongUrlException {
-        this(PageLink.id(url), PageLink.created(url));
+    public PageLink(final EncodedPageLink encoded) {
+        this.encoded = encoded;
     }
 
     public long getCreated() {
-        return this.created;
+        return this.encoded.created();
     }
 
-    private static String decode(final String url) throws WrongUrlException {
-        try {
-            return new String(Base64.getUrlDecoder().decode(url));
-        } catch (final Exception e) {
-            throw new WrongUrlException(url);
-        }
-    }
 
     public int getUserId() {
-        return this.userId;
-    }
-    
-    private static long created(final String url) throws WrongUrlException {
-        final String decoded = PageLink.decode(url);
-        try {
-            return Long.valueOf(decoded.substring(
-                decoded.indexOf(PageLink.DELIM) + 1, decoded.length()
-                )
-            );
-        } catch (final Exception e) {
-            throw new WrongUrlException(url);
-        }
-        
-    }
-
-    private static int id(final String url) throws WrongUrlException {
-        final String decoded = PageLink.decode(url);
-        try {
-            return Integer.valueOf(
-                decoded.substring(0, decoded.indexOf(PageLink.DELIM))
-                );
-        } catch (final Exception e) {
-            throw new WrongUrlException(url);
-        }
+        return this.encoded.id();
     }
 
     public String getUrl() {
-        return PageLink.url(this.getUserId(), this.getCreated());
-    }
-    /**
-     * Creates short url from pageLink
-     * @param pageLink
-     * @return
-     */
-    private static String url(final long userId, final long created) {
-        return Base64.getUrlEncoder().encodeToString(
-            (
-                new StringBuilder()
-                    .append(String.valueOf(userId))
-                    .append(DELIM)
-                    .append(String.valueOf(created))
-                    .toString()      
-            ).getBytes()
-        );
+        return this.encoded.url();
     }
 
     @Override
     public String toString() {
         final StringBuilder builder = new StringBuilder();
-        builder.append("PageLink [userId=");
-        builder.append(userId);
-        builder.append(", created=");
-        builder.append(created);
+        builder.append("PageLink [encoded=");
+        builder.append(encoded);
         builder.append("]");
         return builder.toString();
     }
@@ -104,8 +50,7 @@ public class PageLink {
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime * result + (int) (created ^ (created >>> 32));
-        result = prime * result + userId;
+        result = prime * result + ((encoded == null) ? 0 : encoded.hashCode());
         return result;
     }
 
@@ -118,12 +63,14 @@ public class PageLink {
         if (!(obj instanceof PageLink))
             return false;
         final PageLink other = (PageLink) obj;
-        if (created != other.created)
-            return false;
-        if (userId != other.userId)
+        if (encoded == null) {
+            if (other.encoded != null)
+                return false;
+        } else if (!encoded.equals(other.encoded))
             return false;
         return true;
     }
 
+   
 
 }

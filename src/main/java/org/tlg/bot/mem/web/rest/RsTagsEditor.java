@@ -17,8 +17,8 @@ import org.slf4j.LoggerFactory;
 import org.tlg.bot.mem.db.RepTags;
 import org.tlg.bot.mem.db.domain.MediaTags;
 import org.tlg.bot.mem.db.domain.PageLink;
-import org.tlg.bot.mem.exceptions.WrongUrlException;
-import org.tlg.bot.mem.web.dto.TagDto;
+import org.tlg.bot.mem.exceptions.EncodedException;
+import org.tlg.bot.mem.util.EncodedPageLink;
 import org.tlg.bot.mem.web.dto.TagsDto;
 import org.vmk.db.ds.Ds;
 
@@ -60,13 +60,7 @@ public class RsTagsEditor {
 
     private Response response(final Collection<MediaTags> tags) {
         final Collection<TagsDto> map = tags.stream().map(mTag -> {
-            return new TagsDto(
-                "/media/" + mTag.getPicture().getFileId(),
-                mTag.getPicture().getFileId(),
-                mTag.getTags().getTags().stream().map(tag -> {
-                    return new TagDto(tag);
-                    }).collect(Collectors.toList())
-                );
+            return new TagsDto(mTag);
         }).collect(Collectors.toList());
         return Response.ok().entity(map).build();
     }
@@ -79,8 +73,8 @@ public class RsTagsEditor {
      */
     private Optional<Integer> userId(final String token) {
         try {
-            return Optional.of(new PageLink(token).getUserId());
-        } catch (final WrongUrlException e) {
+            return Optional.of(new PageLink(new EncodedPageLink(token)).getUserId());
+        } catch (final EncodedException e) {
             log.error("wrong token:{}", token);
         }
         return Optional.empty();

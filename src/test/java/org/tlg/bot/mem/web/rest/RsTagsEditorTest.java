@@ -44,6 +44,7 @@ public class RsTagsEditorTest  extends JerseyDbMethodTest {
             target("tags").request().header("token", token).get();
         assertThat(response.getStatus(), equalTo(200));
         System.out.printf("res:%s", response.readEntity(String.class));
+       
 //        assertThat(response.readEntity(String.class), containsString(url));
     }
     

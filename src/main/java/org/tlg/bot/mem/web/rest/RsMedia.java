@@ -35,9 +35,11 @@ public class RsMedia {
     private static final Logger log = LoggerFactory
         .getLogger(RsMedia.class.getName());
 
+    public static final String URL_MEDIAS = "/media/";
     @GET
-    @Path("/media/{id}")
+    @Path(RsMedia.URL_MEDIAS + "{id}")
     @Produces(MediaType.APPLICATION_OCTET_STREAM)
+    //TODO cache
     public Response media(@PathParam("id") final String id,
         @Suspended final AsyncResponse asyncResponse) {
         log.debug("media:{}", id);

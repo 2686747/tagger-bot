@@ -19,7 +19,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.tlg.bot.mem.db.RepPageLinks;
 import org.tlg.bot.mem.db.domain.PageLink;
-import org.tlg.bot.mem.exceptions.WrongUrlException;
+import org.tlg.bot.mem.exceptions.EncodedException;
+import org.tlg.bot.mem.util.EncodedPageLink;
 import org.vmk.db.ds.Ds;
 import jersey.repackaged.com.google.common.collect.ImmutableMap;
 
@@ -55,7 +56,7 @@ public class RsTagsMainPage {
 
         try {
 
-            final PageLink pageLink = new PageLink(page);
+            final PageLink pageLink = new PageLink(new EncodedPageLink(page));
             final Optional<PageLink> pl = new RepPageLinks(this.getDs())
                 .findByUserId(pageLink.getUserId());
             if (pl.isPresent()) {
@@ -64,7 +65,7 @@ public class RsTagsMainPage {
                     .build();
             }
             return Response.status(Status.NOT_FOUND).entity("Not found").build();
-        } catch (final WrongUrlException e) {
+        } catch (final EncodedException e) {
             log.debug("wrong request:{}", page);
             return Response.status(Status.NOT_FOUND).entity("Not found")
                 .build();
