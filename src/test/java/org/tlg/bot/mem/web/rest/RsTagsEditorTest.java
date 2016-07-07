@@ -46,5 +46,6 @@ public class RsTagsEditorTest  extends JerseyDbMethodTest {
         System.out.printf("res:%s", response.readEntity(String.class));
 //        assertThat(response.readEntity(String.class), containsString(url));
     }
+    
 
 }

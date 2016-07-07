@@ -2,13 +2,18 @@ package org.tlg.bot.mem;
 
 import java.util.HashMap;
 import java.util.Map;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.telegram.telegrambots.TelegramApiException;
+import org.telegram.telegrambots.api.methods.BotApiMethod;
+import org.telegram.telegrambots.api.methods.GetFile;
 import org.telegram.telegrambots.api.methods.send.SendMessage;
+import org.telegram.telegrambots.api.objects.File;
 import org.telegram.telegrambots.api.objects.Message;
 import org.telegram.telegrambots.api.objects.Update;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
+import org.telegram.telegrambots.updateshandlers.SentCallback;
 import org.tlg.bot.mem.commands.Command;
 import org.tlg.bot.mem.commands.CommandProcessor;
 import org.tlg.bot.mem.commands.SearchMediaCommand;
@@ -32,6 +37,38 @@ public class MemBot extends TelegramLongPollingBot {
     @Override
     public void onUpdateReceived(final Update update) {
         log.debug("update:{}", update.getJson().toString());
+        if (update.hasMessage()) {
+            if (update.getMessage().hasText()) {
+                if (update.getMessage().getText().contains("/e")) {
+                    try {
+                        this.getFileAsync(
+                            new GetFile().setFileId("AgADAgAD0qgxG0WM3gUkd2Sr223dYhFASA0ABF327qqdAS2TQNMAAgI"),
+                            new SentCallback<File>() {
+                                
+                                @Override
+                                public void onResult(final BotApiMethod<File> arg0, final JSONObject arg1) {
+                                    log.debug("photo:{}", arg1);
+                                    
+                                }
+                                
+                                @Override
+                                public void onException(final BotApiMethod<File> arg0, final Exception arg1) {
+                                    // TODO Auto-generated method stub
+                                    
+                                }
+                                
+                                @Override
+                                public void onError(final BotApiMethod<File> arg0, final JSONObject arg1) {
+                                    // TODO Auto-generated method stub
+                                    
+                                }
+                            });
+                    } catch (final TelegramApiException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
         // process if this somebody answer
         if (update.hasMessage()) {
             if (update.getMessage().hasText()) {

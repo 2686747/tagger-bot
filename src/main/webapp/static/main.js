@@ -1,4 +1,4 @@
 /**
  * 
  */
-alert('included');
+console.log('included');
