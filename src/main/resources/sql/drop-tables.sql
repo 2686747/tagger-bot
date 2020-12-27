@@ -1,1 +1,1 @@
-DROP TABLE IF EXISTS Photo, Tags;
+DROP TABLE IF EXISTS Photo, Tags, PageLinks;

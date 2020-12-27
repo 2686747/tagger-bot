@@ -15,7 +15,6 @@
 		<AsyncLogger name="org.tlg" level="debug" additivity="false"
 			includeLocation="true">
 			<AppenderRef ref="AsyncConsole" />
-			<AppenderRef ref="RollingFile" />
 		</AsyncLogger>
 		<Root level="error">
 			<AppenderRef ref="AsyncConsole" />

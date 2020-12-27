@@ -13,16 +13,21 @@ public class MediaTags {
 
     private final Picture picture;
     private final Tags tags;
-    
+    //transient
+    private final MediaTagsId id;
     public MediaTags(
         final Picture photo, final Tags tags
         ) {
-        if (tags.isEmpty()) {
-            throw new IllegalArgumentException("Tags can't be empty");
-        }
+//        if (tags.isEmpty()) {
+//            throw new IllegalArgumentException("Tags can't be empty");
+//        }
         this.picture = photo;
         this.tags = tags;
-        
+        this.id = MediaTags.id(photo);
+    }
+
+    private static MediaTagsId id(final Picture photo) {
+        return new MediaTagsId(photo.getUserId(), photo.getFileId());
     }
 
     public final Picture getPicture() {
@@ -30,6 +35,10 @@ public class MediaTags {
     }
     public final Tags getTags() {
         return tags;
+    }
+
+    public MediaTagsId getId() {
+        return id;
     }
 
     @Override

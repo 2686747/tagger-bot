@@ -4,33 +4,31 @@
 package org.tlg.bot.mem.web.dto;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.stream.Collectors;
 import org.tlg.bot.mem.db.domain.MediaTags;
+import org.tlg.bot.mem.web.Server;
 import org.tlg.bot.mem.web.rest.RsMedia;
 
 /**
+ * Tags structure only for response.
+ * 
  * @author Maksim Vakhnik
  *
  */
 public class TagsDto {
 
     private final String url;
-    private final TagsId id;
+    private final String id;
     private final Collection<TagDto> tags;
 
-    public String getUrl() {
-        return url;
+    @SuppressWarnings("unused")
+    // jersey ctor
+    private TagsDto() {
+        this("", "", Collections.emptyList());
     }
 
-    public String getId() {
-        return id.getId();
-    }
-
-    public Collection<TagDto> getTags() {
-        return tags;
-    }
-
-    private TagsDto(final String url, final TagsId id,
+    private TagsDto(final String url, final String id,
         final Collection<TagDto> tags) {
         this.url = url;
         this.id = id;
@@ -41,9 +39,20 @@ public class TagsDto {
         this(TagsDto.url(tags), TagsDto.id(tags), TagsDto.tags(tags));
     }
 
-    private static TagsId id(final MediaTags tags) {
-        return new TagsId(tags.getPicture().getUserId(),
-            tags.getPicture().getFileId());
+    public String getUrl() {
+        return this.url;
+    }
+
+    public String getId() {
+        return this.id;
+    }
+
+    public Collection<TagDto> getTags() {
+        return tags;
+    }
+
+    private static String id(final MediaTags tags) {
+        return tags.getId().getId();
     }
 
     /**
@@ -52,7 +61,8 @@ public class TagsDto {
      * @return url for {@code RsMedia.tags()}
      */
     private static String url(final MediaTags tags) {
-        return RsMedia.URL_MEDIAS + tags.getPicture().getFileId();
+        return Server.URL_REST + RsMedia.URL_MEDIAS
+            + tags.getPicture().getFileId();
     }
 
     private static Collection<TagDto> tags(final MediaTags tags) {

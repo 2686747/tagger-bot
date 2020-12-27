@@ -11,6 +11,13 @@ public class TagDto {
 
     private final String tag;
     
+    
+    @SuppressWarnings("unused")
+    //Jersey
+    private TagDto() {
+        this(null);
+    }
+
     public TagDto(final String tag) {
         this.tag = tag;
     }

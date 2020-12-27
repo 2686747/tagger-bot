@@ -16,6 +16,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.tlg.bot.mem.db.domain.BasePicture;
 import org.tlg.bot.mem.db.domain.MediaTags;
+import org.tlg.bot.mem.db.domain.MediaTagsId;
 import org.tlg.bot.mem.db.domain.Picture;
 import org.tlg.bot.mem.db.domain.Tags;
 import org.tlg.bot.mem.db.domain.TlgMediaType;
@@ -63,13 +64,13 @@ public class RepTags {
         }
         ps.executeBatch();
     }
-    
+
     public void delete(final Picture picture) throws SQLException {
         try (final Connection conn = ds.dataSource().getConnection()) {
             delete(conn, picture);
         }
     }
-    
+
     public void update(final MediaTags tags) throws SQLException {
         try (final Connection conn = ds.dataSource().getConnection()) {
             conn.setAutoCommit(false);
@@ -189,6 +190,22 @@ public class RepTags {
         }
     }
 
+    public Optional<MediaTags> findById(final MediaTagsId id)
+        throws SQLException {
+        try (final Connection conn = ds.dataSource().getConnection()) {
+            final StringBuilder sql = new StringBuilder("SELECT * FROM ")
+                .append(MediaTags.TABLE)
+                .append(" WHERE user_id = ? AND photo_id = ?");
+            final PreparedStatement ps = conn.prepareStatement(sql.toString());
+            ps.setInt(1, id.getUserId());
+            ps.setString(2, id.getMediaId());
+            final ResultSet rs = ps.executeQuery();
+            final Collection<MediaTags> mediaTags = RepTags.mediaTags(rs);
+            return Optional.ofNullable(
+                mediaTags.size() > 0 ? mediaTags.iterator().next() : null);
+        }
+    }
+
     private static Collection<MediaTags> mediaTags(final ResultSet rs)
         throws SQLException {
         final Collection<MediaTags> result = new ArrayList<>();
@@ -197,15 +214,13 @@ public class RepTags {
             final Picture picture = new BasePicture(
                 rs.getInt("user_id"),
                 rs.getString("photo_id"),
-                TlgMediaType.get(rs.getByte("media_type"))
-                );
-            final Collection<String> picTags =
-                tags.getOrDefault(picture, new ArrayList<>());
+                TlgMediaType.get(rs.getByte("media_type")));
+            final Collection<String> picTags = tags.getOrDefault(picture,
+                new ArrayList<>());
             picTags.add(rs.getString("tag_id"));
             tags.put(
                 picture,
-                picTags
-            );
+                picTags);
         }
         tags.forEach((pic, picTags) -> {
             result.add(new MediaTags(pic, new Tags(picTags)));
@@ -213,5 +228,4 @@ public class RepTags {
         return result;
     }
 
-    
 }

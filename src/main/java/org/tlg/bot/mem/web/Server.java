@@ -16,12 +16,14 @@ import org.vmk.db.ds.Ds;
  *
  */
 public class Server {
+    public static final String URL_REST = "/api";
+
     public static void main(final String[] args) throws Exception {
         new Server().start();
     }
 
     public void start() throws Exception {
-        final URI baseUri = UriBuilder.fromUri("http://localhost/api")
+        final URI baseUri = UriBuilder.fromUri("http://localhost" + Server.URL_REST)
             .port(9998).build();
         final HttpServer httpServer = GrizzlyHttpServerFactory.createHttpServer(
             baseUri,

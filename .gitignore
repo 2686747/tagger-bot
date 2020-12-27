@@ -8,5 +8,7 @@ target
 *.trace.db
 src/main/java/tools/**
 .lib
-
+.idea/**
 test-output/**
+
+taggerbot.iml

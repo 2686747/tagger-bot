@@ -1,4 +1,4 @@
-DROP TABLE IF EXISTS Photo, Tags, PageUrls;
+DROP TABLE IF EXISTS Photo, Tags, PageLinks;
 CREATE TABLE IF NOT EXISTS Photo
   (
   photo_id VARCHAR NOT NULL PRIMARY KEY,

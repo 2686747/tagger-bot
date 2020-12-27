@@ -7,6 +7,13 @@
 Telegram bot is used for tagging media files for quick sending it in a chat.
 Bot tags your photos and stickers. Just send photo or media to the bot and he will ask you about tags for these medias. After saving you can get your pictures by tags in any chat. Just input  "@taggsBot tag othertag againothertag ..." and bot will show you your pictures with such tags. 
 
+# How to run
+
+# How to test
+
+# How to deploy
+
+
 ###See more [here](http://2686747.github.io/tagger-bot/)
 
 ##Powered by

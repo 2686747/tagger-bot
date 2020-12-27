@@ -36,6 +36,13 @@ public class RsMedia {
         .getLogger(RsMedia.class.getName());
 
     public static final String URL_MEDIAS = "/media/";
+    
+    /**
+     * Loads image from telegram
+     * @param id
+     * @param asyncResponse
+     * @return
+     */
     @GET
     @Path(RsMedia.URL_MEDIAS + "{id}")
     @Produces(MediaType.APPLICATION_OCTET_STREAM)

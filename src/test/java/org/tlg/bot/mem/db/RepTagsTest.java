@@ -3,7 +3,7 @@
  */
 package org.tlg.bot.mem.db;
 
-import static org.hamcrest.Matchers.contains;
+import static org.hamcrest.Matchers.equalTo;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
@@ -16,12 +16,15 @@ import java.util.Collection;
 import java.util.Optional;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
+import org.hamcrest.core.Is;
+import org.hamcrest.core.IsCollectionContaining;
 import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.tlg.bot.mem.db.domain.BasePicture;
 import org.tlg.bot.mem.db.domain.MediaTags;
+import org.tlg.bot.mem.db.domain.MediaTagsId;
 import org.tlg.bot.mem.db.domain.Picture;
 import org.tlg.bot.mem.db.domain.Tags;
 import org.tlg.bot.mem.db.domain.TlgMediaType;
@@ -37,6 +40,7 @@ public class RepTagsTest {
     private static final Logger log = LoggerFactory
         .getLogger(RepTagsTest.class.getName());
     private Ds ds;
+
     @Before
     public void setUp() throws SQLException, IOException, URISyntaxException {
         this.ds = new TestDs();
@@ -58,14 +62,12 @@ public class RepTagsTest {
         new RepTags(this.ds).save(pht2);
         assertTrue(
             "Saved picture returns as not present",
-            new RepTags(this.ds).isSaved(saved1)
-        );
+            new RepTags(this.ds).isSaved(saved1));
         assertTrue(
             "Saved picture returns as not present",
-            new RepTags(this.ds).isSaved(saved2)
-        );
+            new RepTags(this.ds).isSaved(saved2));
     }
-    
+
     @Test
     public void isSavedTestShouldNotPresent() throws SQLException {
 
@@ -78,10 +80,9 @@ public class RepTagsTest {
         new RepTags(this.ds).save(pht1);
         assertFalse(
             "Unsaved picture returns as  present",
-            new RepTags(this.ds).isSaved(saved2)
-        );
+            new RepTags(this.ds).isSaved(saved2));
     }
-    
+
     @Test
     public void updateTags() throws SQLException {
         final Integer userId = 1;
@@ -154,8 +155,7 @@ public class RepTagsTest {
         new RepTags(this.ds).save(pht1);
         assertFalse(
             "Tags don't have to exist",
-            new RepTags(this.ds).findTagsByFileId(unsaved).isPresent()
-            );
+            new RepTags(this.ds).findTagsByFileId(unsaved).isPresent());
     }
 
     @Test
@@ -184,13 +184,13 @@ public class RepTagsTest {
         MatcherAssert.assertThat("Result of tags is not correct", photos,
             Matchers.hasSize(pict));
 
-        //this should pict/
+        // this should pict/
         final Collection<Picture> partOfPhotos = new RepTags(this.ds)
             .findByTags(new Tags("tag49"), user2);
         MatcherAssert.assertThat("Result of tags is not correct", partOfPhotos,
             Matchers.hasSize(11));
     }
-    
+
     @Test
     public void userTagsShouldReturnAllUserTagMedia() throws SQLException {
         final Integer userId = 1;
@@ -205,7 +205,25 @@ public class RepTagsTest {
         new RepTags(this.ds).save(pht2);
         final Collection<MediaTags> testTags = new RepTags(this.ds)
             .findUserMediaTags(userId);
-        assertThat(testTags, contains(pht1, pht2));
-        
+        assertThat(testTags, IsCollectionContaining.hasItems(pht1, pht2));
+        assertThat(testTags.size(), equalTo(2));
+    }
+
+    @Test
+    public void findById() throws Exception {
+        final Integer userId = 1;
+        final Picture saved1 = new BasePicture(userId, "1", TlgMediaType.PHOTO);
+        final String tag1 = "tag1";
+        final Tags tags1 = new Tags(tag1 + " tag2 tag3");
+        final MediaTags pht1 = new MediaTags(saved1, tags1);
+        final Picture saved2 = new BasePicture(userId, "2", TlgMediaType.PHOTO);
+        final Tags tags2 = new Tags("tag22 tag23");
+        final MediaTags pht2 = new MediaTags(saved2, tags2);
+        new RepTags(this.ds).save(pht1);
+        new RepTags(this.ds).save(pht2);
+        final Optional<MediaTags> found = new RepTags(this.ds)
+            .findById(new MediaTagsId(userId, saved1.getFileId()));
+        assertThat(found.isPresent(), Is.is(true));
+        assertEquals(pht1, found.get());
     }
 }
