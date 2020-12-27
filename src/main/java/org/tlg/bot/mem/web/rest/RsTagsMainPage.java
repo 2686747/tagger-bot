@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.tlg.bot.mem.web.rest;
 
@@ -21,13 +21,13 @@ import org.tlg.bot.mem.db.RepPageLinks;
 import org.tlg.bot.mem.db.domain.PageLink;
 import org.tlg.bot.mem.exceptions.EncodedException;
 import org.tlg.bot.mem.util.EncodedPageLink;
-import org.vmk.db.ds.Ds;
+import org.tlg.bot.mem.db.ds.Ds;
 import jersey.repackaged.com.google.common.collect.ImmutableMap;
 
 /**
  * Bot will return url to /edit tag. This url will be processed by this
  * conroller and user will receive html page where could edit his tags.
- * 
+ *
  * @author Maksim Vakhnik
  *
  */
@@ -46,7 +46,7 @@ public class RsTagsMainPage {
 
     /**
      * Checks url, return page or 404
-     * 
+     *
      * @return correct html page for editing
      */
     @GET
@@ -73,9 +73,9 @@ public class RsTagsMainPage {
             log.error("Error for url:" + page, e);
             throw new InternalError();
         }
-        
+
     }
-    
+
     public Ds getDs() {
         return ds;
     }

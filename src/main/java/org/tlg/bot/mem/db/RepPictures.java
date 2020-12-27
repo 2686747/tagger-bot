@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.tlg.bot.mem.db;
 
@@ -13,7 +13,7 @@ import org.slf4j.LoggerFactory;
 import org.tlg.bot.mem.db.domain.BasePicture;
 import org.tlg.bot.mem.db.domain.Picture;
 import org.tlg.bot.mem.db.domain.TlgMediaType;
-import org.vmk.db.ds.Ds;
+import org.tlg.bot.mem.db.ds.Ds;
 
 /**
  * Saves pictures.
@@ -57,25 +57,25 @@ private static final Logger log = LoggerFactory
             if (rs.next()) {
                 return Optional.of(new DbPhoto(rs));
             }
-            
+
         }
         return Optional.empty();
     }
-    
+
     private static class DbPhoto extends  BasePicture {
-        
+
         private DbPhoto(final ResultSet rs) throws SQLException {
             super(DbPhoto.userId(rs), DbPhoto.photoId(rs), TlgMediaType.PHOTO);
         }
-        
+
         private static String photoId(final ResultSet rs) throws SQLException {
-            
+
             return rs.getString("photo_id");
         }
 
         private static Integer userId(final ResultSet rs) throws SQLException {
             return rs.getInt("user_id");
         }
-        
+
     }
 }

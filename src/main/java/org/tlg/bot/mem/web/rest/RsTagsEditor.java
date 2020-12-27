@@ -21,11 +21,11 @@ import org.tlg.bot.mem.db.domain.MediaTags;
 import org.tlg.bot.mem.db.domain.MediaTagsId;
 import org.tlg.bot.mem.db.domain.PageLink;
 import org.tlg.bot.mem.db.domain.Tags;
+import org.tlg.bot.mem.db.ds.Ds;
 import org.tlg.bot.mem.exceptions.EncodedException;
 import org.tlg.bot.mem.util.EncodedPageLink;
 import org.tlg.bot.mem.util.EncodedTagsId;
 import org.tlg.bot.mem.web.dto.TagsDto;
-import org.vmk.db.ds.Ds;
 
 @Path("/")
 public class RsTagsEditor {
@@ -44,7 +44,7 @@ public class RsTagsEditor {
 
     /**
      * Updates medias. If medias contains empty tags - it will be removed.
-     * 
+     *
      * @param token
      * @param tags
      * @return 200 if ok, 404 if not
@@ -130,7 +130,7 @@ public class RsTagsEditor {
     @Produces(MediaType.APPLICATION_JSON)
     public Response tagsTest() {
         log.debug("test");
-        
+
         final String tokenTmp = new EncodedPageLink(98470981, 1467912868474L)
             .url();
         log.debug("testtoken:{}", tokenTmp);
@@ -156,7 +156,7 @@ public class RsTagsEditor {
 
     /**
      * Converts token to PageLink and returns userId
-     * 
+     *
      * @param token
      * @return Optinal.emtpy() if can't find
      */

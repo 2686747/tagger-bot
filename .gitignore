@@ -10,5 +10,9 @@ src/main/java/tools/**
 .lib
 .idea/**
 test-output/**
+#local/**
 
 taggerbot.iml
+start-local.sh
+.attach_pid*
+mems_bot.dev.mv.db*

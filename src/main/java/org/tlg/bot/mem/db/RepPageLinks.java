@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.tlg.bot.mem.db;
 
@@ -11,7 +11,7 @@ import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.tlg.bot.mem.db.domain.PageLink;
-import org.vmk.db.ds.Ds;
+import org.tlg.bot.mem.db.ds.Ds;
 
 /**
  * @author "Maksim Vakhnik"
@@ -29,9 +29,9 @@ public class RepPageLinks {
 
     /**
      * Creates(replace current) url in database for current user
-     * 
+     *
      * @param userId
-     * @throws SQLException 
+     * @throws SQLException
      */
     public void create(final int userId) throws SQLException {
         try (final Connection conn = ds.dataSource().getConnection()) {
@@ -41,7 +41,7 @@ public class RepPageLinks {
             }
             save(conn, userId);
             conn.commit();
-        } 
+        }
     }
 
     private void save(final Connection conn, final int userId) throws SQLException {
@@ -53,7 +53,7 @@ public class RepPageLinks {
         ps.setLong(2, System.nanoTime());
         log.debug("save page link:{}", ps);
         ps.execute();
-        
+
     }
 
     private void delete(final Connection conn, final int userId)

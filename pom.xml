@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.telegram</groupId>
 	<artifactId>taggerbot</artifactId>
-	<version>0.2016.603.039-SNAPSHOT</version>
+	<version>0.2020.1227.1238-SNAPSHOT</version>
 	<properties>
 		<telegrambots.version>dev-SNAPSHOT</telegrambots.version>
 		<version.hikaricp>2.4.6</version.hikaricp>
@@ -12,12 +12,12 @@
 	</properties>
 
 	<repositories>
-		<repository>
-			<id>central</id>
-			<name>Maven Repository Switchboard</name>
-			<layout>default</layout>
-			<url>http://repo1.maven.org/maven2</url>
-		</repository>
+<!--		<repository>-->
+<!--			<id>central</id>-->
+<!--			<name>Maven Repository Switchboard</name>-->
+<!--			<layout>default</layout>-->
+<!--			<url>http://repo1.maven.org/maven2</url>-->
+<!--		</repository>-->
 		<repository>
 			<id>jitpack.io</id>
 			<url>https://jitpack.io</url>
@@ -40,7 +40,7 @@
 		<dependency>
 			<groupId>com.github.2686747</groupId>
 			<artifactId>TelegramBots</artifactId>
-			<version>fork-dev-SNAPSHOT</version>
+			<version>0.2020.1227.1222</version>
 		</dependency>
 		<dependency>
 			<groupId>junit</groupId>
@@ -102,11 +102,6 @@
 			<groupId>com.h2database</groupId>
 			<artifactId>h2</artifactId>
 			<version>1.4.191</version>
-		</dependency>
-		<dependency>
-			<groupId>com.github.2686747</groupId>
-			<artifactId>db</artifactId>
-			<version>dev-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>com.jcabi</groupId>

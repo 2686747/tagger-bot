@@ -14,7 +14,7 @@ import org.tlg.bot.mem.msg.HelpMessage;
 public class HelpCommand extends ExecuteCommand {
     private static final Logger log = LoggerFactory
         .getLogger(HelpCommand.class.getName());
-   
+
     private final Long chatId;
 
     public HelpCommand(final MemBot bot, final Long chatId) {
@@ -27,11 +27,11 @@ public class HelpCommand extends ExecuteCommand {
         try {
             getBot().sendMessage(new HelpMessage(this.chatId));
         } catch (final TelegramApiException e) {
-            log.error("Can't send help messagemessage", e);
+            log.error("Can't send help message", e);
         }
-        
+
     }
 
 
-    
+
 }

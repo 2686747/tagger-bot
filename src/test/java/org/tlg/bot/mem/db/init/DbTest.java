@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.tlg.bot.mem.db.init;
 
@@ -7,8 +7,8 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.file.Paths;
 import java.sql.SQLException;
-import org.vmk.db.Db;
-import org.vmk.db.ds.Ds;
+import org.tlg.bot.mem.db.ds.Db;
+import org.tlg.bot.mem.db.ds.Ds;
 
 /**
  * Creates test db
@@ -18,8 +18,8 @@ import org.vmk.db.ds.Ds;
 public class DbTest {
     private static final String SQL_CREATE_TABLE = "/sql/create-tables.sql";
     private final Ds ds;
-    
-    
+
+
     public DbTest(final Ds ds) {
         this.ds = ds;
     }

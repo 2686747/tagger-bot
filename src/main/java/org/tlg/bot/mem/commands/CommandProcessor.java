@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.tlg.bot.mem.commands;
 
@@ -11,7 +11,7 @@ import org.tlg.bot.mem.MemBot;
 
 /**
  * Process udpate object and return needed command.
- * 
+ *
  * @author "Maksim Vakhnik"
  *
  */
@@ -30,7 +30,7 @@ public class CommandProcessor {
 
     public Command command() {
         final Message message = this.update.getMessage();
-
+        log.debug("command message:{}", message);
         if (message.hasText()) {
             // if help
             if (message.getText().startsWith("/help")) {
@@ -43,7 +43,7 @@ public class CommandProcessor {
             return new HelpCommand(this.bot, message.getChatId());
         }
         // if this is photo or sticker
-        if (message.getSticker() != null || 
+        if (message.getSticker() != null ||
             (message.getPhoto() != null && !message.getPhoto().isEmpty())) {
             return new UploadCommand(this.bot, message);
         }

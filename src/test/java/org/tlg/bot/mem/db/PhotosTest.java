@@ -12,7 +12,7 @@ import org.tlg.bot.mem.db.domain.BasePicture;
 import org.tlg.bot.mem.db.domain.Picture;
 import org.tlg.bot.mem.db.domain.TlgMediaType;
 import org.tlg.bot.mem.db.init.DbTest;
-import org.vmk.db.ds.Ds;
+import org.tlg.bot.mem.db.ds.Ds;
 import helper.db.TestDs;
 
 public class PhotosTest {

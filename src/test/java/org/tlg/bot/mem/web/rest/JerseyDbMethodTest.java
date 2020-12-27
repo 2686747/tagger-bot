@@ -10,7 +10,7 @@ import org.glassfish.jersey.test.TestProperties;
 import org.testng.annotations.BeforeMethod;
 import org.tlg.bot.mem.db.init.DbTest;
 import org.tlg.bot.mem.web.JerseyConfig;
-import org.vmk.db.ds.Ds;
+import org.tlg.bot.mem.db.ds.Ds;
 import helper.db.TestDs;
 
 /**

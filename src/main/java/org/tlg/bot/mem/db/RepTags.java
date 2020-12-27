@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.tlg.bot.mem.db;
 
@@ -20,11 +20,11 @@ import org.tlg.bot.mem.db.domain.MediaTagsId;
 import org.tlg.bot.mem.db.domain.Picture;
 import org.tlg.bot.mem.db.domain.Tags;
 import org.tlg.bot.mem.db.domain.TlgMediaType;
-import org.vmk.db.ds.Ds;
+import org.tlg.bot.mem.db.ds.Ds;
 
 /**
  * Save tags.
- * 
+ *
  * @author "Maksim Vakhnik"
  *
  */
@@ -84,7 +84,7 @@ public class RepTags {
 
     /**
      * Commit externally this transaction
-     * 
+     *
      * @param media
      * @throws SQLException
      */

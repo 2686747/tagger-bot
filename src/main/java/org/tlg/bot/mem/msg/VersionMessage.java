@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.tlg.bot.mem.msg;
 
@@ -19,7 +19,7 @@ public class VersionMessage extends TextMessage {
     }
 
     private static String version() {
-        return ResourceReader.readManifest(VERSION).orElse("undefined");
+        return ResourceReader.readManifest(VERSION).orElse("latest");
     }
 
 }
